@@ -1,40 +1,135 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Weight Bill</title>
-<style>
-body{font-family:Arial;margin:0;background:#f3f3f3;color:#000}.app{max-width:1000px;margin:auto;padding:10px}
-button{padding:9px 12px;margin:3px;border:0;border-radius:7px;background:#222;color:white}
-.bill{background:white;padding:12px}.date{font-size:21px;font-weight:bold;margin:8px 0 14px;color:#000;white-space:nowrap}
-.date input{font-size:21px;font-weight:bold;border:0;outline:0;color:#000;background:white;width:145px}
-.grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bbb}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
-th,td{border:1px solid #ccc;height:40px;padding:4px 8px;width:33.333%;color:#000}
-th{text-align:left}input{width:100%;border:0;outline:0;font-size:16px;color:#000}
-.total td{font-weight:bold;background:#fafafa;color:#000}
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-/* ONLY TOTAL ALIGNMENT */
-.summary{font-size:24px;font-weight:bold;line-height:1.8;margin-top:18px;color:#000}
-.summary div{
-  display:grid;
-  grid-template-columns:170px 1fr;
-  white-space:nowrap
+<title>Weight Bill</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#f3f3f3;color:#000}
+.app{max-width:1000px;margin:auto;padding:10px}
+
+button{
+padding:9px 12px;
+margin:3px;
+border:0;
+border-radius:7px;
+background:#222;
+color:white
 }
-.summary b{color:#000;font-weight:bold}
+
+.bill{background:white;padding:12px}
+
+.date{
+font-size:21px;
+font-weight:bold;
+margin:8px 0 14px;
+color:#000;
+white-space:nowrap
+}
+
+.date input{
+font-size:21px;
+font-weight:bold;
+border:0;
+outline:0;
+color:#000;
+background:white;
+width:145px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+border:1px solid #bbb
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+table-layout:fixed
+}
+
+th,td{
+border:1px solid #ccc;
+height:40px;
+padding:4px 8px;
+width:33.333%;
+color:#000
+}
+
+th{text-align:left}
+
+input{
+width:100%;
+border:0;
+outline:0;
+font-size:16px;
+color:#000
+}
+
+.total td{
+font-weight:bold;
+background:#fafafa;
+color:#000
+}
+
+/* TOTAL ALIGNMENT */
+.summary{
+font-size:24px;
+font-weight:bold;
+line-height:1.8;
+margin-top:18px;
+color:#000
+}
+
+.summary div{
+display:grid;
+grid-template-columns:175px 1fr;
+white-space:nowrap
+}
+
+.summary b{
+color:#000;
+font-weight:bold
+}
 
 @media(max-width:700px){
 .grid{grid-template-columns:1fr}
-.summary{font-size:21px}
-.summary div{grid-template-columns:155px 1fr}
+
+.summary{
+font-size:21px
+}
+
+.summary div{
+grid-template-columns:155px 1fr
+}
 }
 
 @media print{
-body{background:white}.actions{display:none}.grid{grid-template-columns:1fr 1fr}.bill{padding:0}
-.date input{border:0}
+body{background:white}
+.actions{display:none}
+.grid{grid-template-columns:1fr 1fr}
+.bill{padding:0}
+
+.date input{
+border:0;
 }
-</style></head><body>
+}
+</style>
+</head>
+
+<body>
 
 <div class="app">
-<div class="actions"><button onclick="add()">+ Add Box</button><button onclick="removeLast()">− Remove</button><button onclick="newBill()">New Bill</button><button onclick="print()">Print / Save PDF</button></div>
+
+<div class="actions">
+<button onclick="add()">+ Add Box</button>
+<button onclick="removeLast()">− Remove</button>
+<button onclick="newBill()">New Bill</button>
+<button onclick="print()">Print / Save PDF</button>
+</div>
 
 <div class="bill">
 
@@ -43,89 +138,230 @@ Date :-
 <input type="date" id="date">
 </div>
 
-<div class="grid"><table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="L"></tbody></table>
-<table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="R"></tbody></table></div>
+<div class="grid">
 
-<div class="summary">
-<div>Total avg :- <b id="avg">0.000</b></div>
-<div>Total qty :- <b id="qty">0</b></div>
-<div>Total weight :- <b id="weight">0.0</b></div>
+<table>
+<thead>
+<tr>
+<th>No.</th>
+<th>Qty.</th>
+<th>Weight.</th>
+</tr>
+</thead>
+<tbody id="L"></tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>No.</th>
+<th>Qty.</th>
+<th>Weight.</th>
+</tr>
+</thead>
+<tbody id="R"></tbody>
+</table>
+
 </div>
 
-</div></div>
+<div class="summary">
+
+<div>
+<span>Total Avg :-</span>
+<b id="avg">0.000</b>
+</div>
+
+<div>
+<span>Total Qty :-</span>
+<b id="qty">0</b>
+</div>
+
+<div>
+<span>Total Weight :-</span>
+<b id="weight">0.0</b>
+</div>
+
+</div>
+
+</div>
+</div>
 
 <script>
-let n=30,data=JSON.parse(localStorage.getItem('wb')||'{}');n=data.n||30;data=data.d||[];
+
+let n=30,
+data=JSON.parse(localStorage.getItem('wb')||'{}');
+
+n=data.n||30;
+data=data.d||[];
 
 let dateInput=document.getElementById('date');
+
 let savedDate=localStorage.getItem('wb_date');
 
-if(savedDate){dateInput.value=savedDate}else{
+if(savedDate){
+dateInput.value=savedDate;
+}else{
 let d=new Date();
-dateInput.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+dateInput.value=
+d.getFullYear()+'-'+
+String(d.getMonth()+1).padStart(2,'0')+'-'+
+String(d.getDate()).padStart(2,'0');
 }
 
-dateInput.onchange=function(){localStorage.setItem('wb_date',this.value)};
+dateInput.onchange=function(){
+localStorage.setItem('wb_date',this.value);
+};
 
 function draw(){
-L.innerHTML='';R.innerHTML='';let h=Math.ceil(n/2);
+
+L.innerHTML='';
+R.innerHTML='';
+
+let h=Math.ceil(n/2);
 
 for(let i=1;i<=n;i++){
-let t=i<=h?L:R,tr=document.createElement('tr');
-tr.innerHTML='<td>'+i+'.</td><td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td><td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
+
+let t=i<=h?L:R,
+tr=document.createElement('tr');
+
+tr.innerHTML=
+'<td>'+i+'.</td>'+
+'<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
+'<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
+
 t.appendChild(tr);
+
 let x=data[i-1]||{};
+
 tr.querySelector('[data-k=q]').value=x.q||'';
-tr.querySelector('[data-k=w]').value=x.w||''
+tr.querySelector('[data-k=w]').value=x.w||'';
 }
 
 for(let t of [L,R]){
-let tr=document.createElement('tr');tr.className='total';
-tr.innerHTML='<td>Total.</td><td>0</td><td>0.0</td>';t.appendChild(tr)
+
+let tr=document.createElement('tr');
+
+tr.className='total';
+
+tr.innerHTML=
+'<td>Total.</td>'+
+'<td>0</td>'+
+'<td>0.0</td>';
+
+t.appendChild(tr);
 }
 
-document.querySelectorAll('input[data-i]').forEach(x=>x.oninput=save);calc()
+document.querySelectorAll('input[data-i]')
+.forEach(x=>x.oninput=save);
+
+calc();
 }
 
 function save(){
+
 data=[];
-document.querySelectorAll('input[data-i]').forEach(x=>{
+
+document.querySelectorAll('input[data-i]')
+.forEach(x=>{
+
 let i=+x.dataset.i;
+
 data[i-1]=data[i-1]||{};
-data[i-1][x.dataset.k]=x.value
+
+data[i-1][x.dataset.k]=x.value;
 });
-localStorage.setItem('wb',JSON.stringify({n:n,d:data}));calc()
+
+localStorage.setItem(
+'wb',
+JSON.stringify({n:n,d:data})
+);
+
+calc();
 }
 
 function calc(){
-let tq=0,tw=0,h=Math.ceil(n/2);
-for(let i=0;i<n;i++){tq+=+data[i]?.q||0;tw+=+data[i]?.w||0}
 
-document.getElementById('qty').textContent=tq;
-document.getElementById('weight').textContent=tw.toFixed(1);
-document.getElementById('avg').textContent=tq?(Math.trunc(tw/tq*1000)/1000).toFixed(3):'0.000';
+let tq=0,
+tw=0,
+h=Math.ceil(n/2);
 
-[[L,0,h],[R,h,n]].forEach(a=>{
-let q=0,w=0;
-for(let i=a[1];i<a[2];i++){q+=+data[i]?.q||0;w+=+data[i]?.w||0}
-let tr=a[0].querySelector('.total');
-tr.children[1].textContent=q;
-tr.children[2].textContent=w.toFixed(1)
-})
+for(let i=0;i<n;i++){
+
+tq+=+data[i]?.q||0;
+tw+=+data[i]?.w||0;
 }
 
-function add(){n++;save();draw()}
-function removeLast(){if(n>1){n--;data=data.slice(0,n);save();draw()}}
+document.getElementById('qty').textContent=tq;
+
+document.getElementById('weight').textContent=
+tw.toFixed(1);
+
+document.getElementById('avg').textContent=
+tq
+?(Math.trunc(tw/tq*1000)/1000).toFixed(3)
+:'0.000';
+
+[[L,0,h],[R,h,n]].forEach(a=>{
+
+let q=0,
+w=0;
+
+for(let i=a[1];i<a[2];i++){
+
+q+=+data[i]?.q||0;
+w+=+data[i]?.w||0;
+}
+
+let tr=a[0].querySelector('.total');
+
+tr.children[1].textContent=q;
+tr.children[2].textContent=w.toFixed(1);
+
+});
+}
+
+function add(){
+n++;
+save();
+draw();
+}
+
+function removeLast(){
+
+if(n>1){
+n--;
+data=data.slice(0,n);
+save();
+draw();
+}
+}
 
 function newBill(){
+
 if(confirm('Current bill clear kare?')){
-n=30;data=[];localStorage.removeItem('wb');
+
+n=30;
+data=[];
+
+localStorage.removeItem('wb');
+
 let d=new Date();
-dateInput.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-localStorage.setItem('wb_date',dateInput.value);draw()
+
+dateInput.value=
+d.getFullYear()+'-'+
+String(d.getMonth()+1).padStart(2,'0')+'-'+
+String(d.getDate()).padStart(2,'0');
+
+localStorage.setItem('wb_date',dateInput.value);
+
+draw();
 }
 }
 
 draw();
+
 </script>
-</body></html>
+
+</body>
+</html>
