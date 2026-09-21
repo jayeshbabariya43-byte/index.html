@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weight Bill</title>
+<style>
+body{font-family:Arial;margin:0;background:#f3f3f3}.app{max-width:1000px;margin:auto;padding:10px}
+button{padding:9px 12px;margin:3px;border:0;border-radius:7px;background:#222;color:white}
+.bill{background:white;padding:12px}.date{font-size:21px;font-weight:bold;margin:8px 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bbb}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;height:40px;padding:4px 8px}
+th{text-align:left}input{width:100%;border:0;outline:0;font-size:16px}
+.total td{font-weight:bold;background:#fafafa}.summary{font-size:20px;font-weight:bold;line-height:1.8;margin-top:18px}
+.summary b{display:inline-block;width:150px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.summary{font-size:17px}}
+@media print{body{background:white}.actions{display:none}.grid{grid-template-columns:1fr 1fr}.bill{padding:0}}
+</style></head><body>
+<div class="app">
+<div class="actions"><button onclick="add()">+ Add Box</button><button onclick="removeLast()">− Remove</button><button onclick="newBill()">New Bill</button><button onclick="print()">Print / Save PDF</button></div>
+<div class="bill">
+<div class="date">Date:- <span id="date"></span></div>
+<div class="grid"><table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="L"></tbody></table>
+<table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="R"></tbody></table></div>
+<div class="summary">
+<div>Total AVG :- <b id="avg">0.000</b></div>
+<div>Total Qty :- <b id="qty">0</b></div>
+<div>Total Weight :- <b id="weight">0.0</b></div>
+</div></div></div>
+<script>
+let n=30,data=JSON.parse(localStorage.getItem('wb')||'{}');n=data.n||30;data=data.d||[];
+function today(){let d=new Date();return String(d.getDate()).padStart(2,'0')+' / '+String(d.getMonth()+1).padStart(2,'0')+' / '+d.getFullYear()}
+document.getElementById('date').textContent=today();
+function draw(){
+ L.innerHTML='';R.innerHTML='';let h=Math.ceil(n/2);
+ for(let i=1;i<=n;i++){let t=i<=h?L:R,tr=document.createElement('tr');tr.innerHTML='<td>'+i+'.</td><td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td><td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';t.appendChild(tr);
+ let x=data[i-1]||{};tr.querySelector('[data-k=q]').value=x.q||'';tr.querySelector('[data-k=w]').value=x.w||''}
+ for(let t of [L,R]){let tr=document.createElement('tr');tr.className='total';tr.innerHTML='<td>Total.</td><td>0</td><td>0.0</td>';t.appendChild(tr)}
+ document.querySelectorAll('input').forEach(x=>x.oninput=save);calc()
+}
+function save(){data=[];document.querySelectorAll('input').forEach(x=>{let i=+x.dataset.i;data[i-1]=data[i-1]||{};data[i-1][x.dataset.k]=x.value});localStorage.setItem('wb',JSON.stringify({n:n,d:data}));calc()}
+function calc(){let tq=0,tw=0,h=Math.ceil(n/2);for(let i=0;i<n;i++){tq+=+data[i]?.q||0;tw+=+data[i]?.w||0}
+document.getElementById('qty').textContent=tq;document.getElementById('weight').textContent=tw.toFixed(1);document.getElementById('avg').textContent=tq?(Math.trunc(tw/tq*1000)/1000).toFixed(3):'0.000';
+[[L,0,h],[R,h,n]].forEach(a=>{let q=0,w=0;for(let i=a[1];i<a[2];i++){q+=+data[i]?.q||0;w+=+data[i]?.w||0}let tr=a[0].querySelector('.total');tr.children[1].textContent=q;tr.children[2].textContent=w.toFixed(1)})}
+function add(){n++;save();draw()}function removeLast(){if(n>1){n--;data=data.slice(0,n);save();draw()}}
+function newBill(){if(confirm('Current bill clear kare?')){n=30;data=[];localStorage.removeItem('wb');document.getElementById('date').textContent=today();draw()}}
+draw();
+</script></body></html>
