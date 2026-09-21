@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1769aa">
+<meta name="theme-color" content="#ffffff">
 <title>Weight Bill App</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#f2f4f7;
+    background:#f2f2f2;
     color:#222;
 }
 
@@ -22,35 +24,37 @@ body{
     padding:10px;
 }
 
+/* TOP */
 .top{
-    background:#1769aa;
-    color:#fff;
-    padding:14px;
-    border-radius:12px 12px 0 0;
+    background:#fff;
+    padding:12px;
+    border:1px solid #ddd;
 }
 
 .top h1{
     margin:0 0 5px;
-    font-size:24px;
+    font-size:23px;
 }
 
 .top p{
     margin:0;
-    font-size:14px;
+    font-size:13px;
+    color:#555;
 }
 
+/* CARD */
 .card{
     background:#fff;
-    border-radius:0 0 12px 12px;
-    box-shadow:0 2px 10px #0001;
     padding:12px;
+    border:1px solid #ddd;
 }
 
+/* DATE */
 .date-row{
     display:flex;
     align-items:center;
-    gap:10px;
-    margin-bottom:12px;
+    gap:8px;
+    margin-bottom:10px;
 }
 
 .date-row label{
@@ -58,47 +62,108 @@ body{
 }
 
 .date-row input{
-    max-width:190px;
+    width:auto;
 }
 
+/* BUTTONS */
 .actions{
     display:flex;
-    gap:8px;
+    gap:7px;
     flex-wrap:wrap;
     margin-bottom:12px;
 }
 
 button{
-    border:0;
-    border-radius:8px;
-    padding:11px 13px;
-    font-size:15px;
+    border:1px solid #aaa;
+    background:#fff;
+    padding:9px 12px;
+    font-size:14px;
     font-weight:bold;
     cursor:pointer;
 }
 
-.add{background:#198754;color:#fff}
-.remove{background:#dc3545;color:#fff}
-.new{background:#6c757d;color:#fff}
-.print{background:#0d6efd;color:#fff}
-.jpg{background:#e67e22;color:#fff}
-.share{background:#25d366;color:#fff}
-.copy{background:#673ab7;color:#fff}
+button:active{
+    transform:scale(.98);
+}
 
-/* BILL - SIMPLE DESIGN */
+.add{
+    border-color:#198754;
+}
+
+.remove{
+    border-color:#dc3545;
+}
+
+.settings-btn{
+    border-color:#555;
+}
+
+/* SETTINGS */
+.settings{
+    display:none;
+    border:1px solid #aaa;
+    padding:12px;
+    margin-bottom:12px;
+    background:#fafafa;
+}
+
+.settings h3{
+    margin:0 0 12px;
+    font-size:18px;
+}
+
+.setting-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+}
+
+.setting-row label{
+    min-width:180px;
+    font-weight:bold;
+}
+
+.setting-row button{
+    min-width:40px;
+    padding:6px 10px;
+}
+
+.setting-value{
+    min-width:55px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.color-range{
+    width:180px;
+}
+
+.auto-box{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.auto-box input{
+    width:auto;
+}
+
+/* BILL */
 .bill-print-area{
     background:#fff;
-    padding:25px;
-    color:#111;
+    padding:20px;
+    color:rgb(var(--textColor),var(--textColor),var(--textColor));
 }
 
 .bill-date{
-    font-size:20px;
+    font-size:var(--textSize);
     font-weight:bold;
-    margin-bottom:18px;
+    margin-bottom:15px;
 }
 
-/* Two sides always together */
+/* TWO TABLES */
 .sides{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -116,27 +181,30 @@ table{
 }
 
 th,td{
-    border:1px solid #bdbdbd;
-    padding:9px 10px;
+    border:1px solid #999;
+    padding:var(--boxPadding);
     text-align:left;
-    font-size:16px;
-    height:38px;
+    font-size:var(--textSize);
+    height:var(--boxHeight);
 }
 
 th{
     font-weight:bold;
 }
 
+/* NO COLUMN */
 th:first-child,
 td:first-child{
-    width:18%;
+    width:20%;
 }
 
+/* QTY */
 th:nth-child(2),
 td:nth-child(2){
-    width:40%;
+    width:38%;
 }
 
+/* WEIGHT */
 th:nth-child(3),
 td:nth-child(3){
     width:42%;
@@ -147,77 +215,99 @@ input{
     border:0;
     outline:0;
     background:transparent;
-    font-size:16px;
+    font-size:var(--textSize);
+    color:rgb(var(--textColor),var(--textColor),var(--textColor));
     padding:2px;
     text-align:left;
 }
 
 .total-row td{
     font-weight:bold;
-    height:42px;
 }
 
-/* Combined total */
+/* EDITABLE TOTAL INPUT */
+.total-input{
+    width:100%;
+    font-weight:bold;
+    border:0;
+    outline:0;
+    background:transparent;
+    font-size:var(--textSize);
+}
+
+/* COMBINED TOTAL */
 .combined{
-    margin-top:25px;
+    margin-top:20px;
 }
 
 .combined-line{
-    font-size:21px;
+    font-size:calc(var(--textSize) + 5px);
     font-weight:bold;
-    margin:12px 0;
+    margin:10px 0;
     white-space:nowrap;
 }
 
+.combined-input{
+    border:0;
+    outline:0;
+    background:transparent;
+    font-size:inherit;
+    font-weight:bold;
+    width:150px;
+    color:inherit;
+}
+
+/* HINT */
 .hint{
     font-size:12px;
     color:#666;
     margin-top:10px;
-    line-height:1.5;
 }
 
-/* Mobile */
+/* MOBILE */
 @media(max-width:700px){
 
     .app{
-        padding:6px;
+        padding:5px;
     }
 
     .top h1{
-        font-size:21px;
-    }
-
-    .sides{
-        grid-template-columns:1fr 1fr;
-        gap:0;
+        font-size:20px;
     }
 
     .bill-print-area{
-        padding:10px 4px;
+        padding:8px 3px;
     }
 
     .bill-date{
-        font-size:15px;
-        margin-bottom:10px;
+        font-size:14px;
+        margin-bottom:9px;
     }
 
     th,td{
-        padding:7px 5px;
-        font-size:12px;
-        height:35px;
+        padding:var(--boxPaddingMobile);
+        font-size:var(--mobileTextSize);
+        height:var(--boxHeightMobile);
     }
 
     input{
-        font-size:13px;
+        font-size:var(--mobileTextSize);
     }
 
     .combined-line{
-        font-size:17px;
+        font-size:calc(var(--mobileTextSize) + 4px);
+    }
+
+    .combined-input{
+        font-size:inherit;
     }
 
     button{
-        flex:1;
-        min-width:135px;
+        padding:9px 10px;
+    }
+
+    .setting-row label{
+        min-width:145px;
     }
 }
 
@@ -236,12 +326,13 @@ input{
     .top,
     .date-row,
     .actions,
+    .settings,
     .hint{
-        display:none;
+        display:none !important;
     }
 
     .card{
-        box-shadow:none;
+        border:0;
         padding:0;
     }
 
@@ -249,15 +340,10 @@ input{
         padding:0;
     }
 
-    .bill-date{
-        font-size:18px;
-        margin-bottom:12px;
-    }
-
     th,td{
         font-size:12px;
         padding:7px;
-        height:34px;
+        height:32px;
     }
 
     input{
@@ -266,7 +352,10 @@ input{
 
     .combined-line{
         font-size:17px;
-        margin:9px 0;
+    }
+
+    .combined-input{
+        font-size:17px;
     }
 }
 </style>
@@ -283,42 +372,134 @@ input{
 
 <div class="card">
 
+<!-- DATE -->
 <div class="date-row">
-    <label for="billDate">Date:</label>
+    <label>Date:</label>
     <input id="billDate" type="date">
 </div>
 
+<!-- BUTTONS -->
 <div class="actions">
 
 <button class="add" onclick="addBox()">+ Add Box</button>
 
 <button class="remove" onclick="removeBox()">− Remove Box</button>
 
-<button class="new" onclick="newBill()">New Bill</button>
+<button onclick="newBill()">New Bill</button>
 
-<button class="print" onclick="printBill()">🖨️ Print / PDF</button>
+<button onclick="printBill()">🖨️ Print / PDF</button>
 
-<button class="jpg" onclick="savePhoto()">🖼️ Save Photo Full HD</button>
+<button onclick="savePhoto()">🖼️ Save Photo Full HD</button>
 
-<button class="share" onclick="shareBill()">📲 Share</button>
+<button onclick="copyBill()">📋 Copy Text</button>
 
-<button class="copy" onclick="copyBill()">📋 Copy Text</button>
+<button class="settings-btn" onclick="toggleSettings()">
+⚙️ Edit / Settings
+</button>
+
+</div>
+
+
+<!-- SETTINGS -->
+<div class="settings" id="settings">
+
+<h3>⚙️ Bill Edit / Settings</h3>
+
+<!-- AUTO TOTAL -->
+<div class="setting-row">
+    <label>Auto Total:</label>
+
+    <div class="auto-box">
+        <input
+            type="checkbox"
+            id="autoTotal"
+            checked
+            onchange="calculate()"
+        >
+        <span>Automatic Calculate</span>
+    </div>
+</div>
+
+
+<!-- BOX SIZE -->
+<div class="setting-row">
+
+<label>Box Size:</label>
+
+<button onclick="changeBoxSize(-2)">−</button>
+
+<span class="setting-value" id="boxSizeValue">
+38
+</span>
+
+<button onclick="changeBoxSize(2)">+</button>
+
+</div>
+
+
+<!-- TEXT SIZE -->
+<div class="setting-row">
+
+<label>Number / Text Size:</label>
+
+<button onclick="changeTextSize(-1)">A−</button>
+
+<span class="setting-value" id="textSizeValue">
+16
+</span>
+
+<button onclick="changeTextSize(1)">A+</button>
+
+</div>
+
+
+<!-- TEXT COLOUR -->
+<div class="setting-row">
+
+<label>Number / Text Colour:</label>
+
+<input
+    class="color-range"
+    id="colorRange"
+    type="range"
+    min="40"
+    max="255"
+    value="20"
+    oninput="changeTextColor(this.value)"
+>
+
+<span class="setting-value" id="colorValue">
+20
+</span>
+
+</div>
+
+
+<!-- RESET STYLE -->
+<div class="setting-row">
+
+<label>Style Reset:</label>
+
+<button onclick="resetStyle()">
+Reset
+</button>
+
+</div>
 
 </div>
 
 
 <!-- BILL -->
-
 <div class="bill-print-area" id="billArea">
 
 <div class="bill-date">
 Date:- <span id="showDate"></span>
 </div>
 
+
 <div class="sides">
 
-<!-- LEFT 1-15 -->
-
+<!-- LEFT -->
 <div class="side">
 
 <table>
@@ -334,11 +515,33 @@ Date:- <span id="showDate"></span>
 <tbody id="leftRows"></tbody>
 
 <tfoot>
+
 <tr class="total-row">
+
 <td>Total.</td>
-<td id="leftQty">0</td>
-<td id="leftWeight">0.0</td>
+
+<td>
+<input
+    class="total-input"
+    id="leftQty"
+    value="0"
+    type="number"
+    step="1"
+>
+</td>
+
+<td>
+<input
+    class="total-input"
+    id="leftWeight"
+    value="0.0"
+    type="number"
+    step="0.1"
+>
+</td>
+
 </tr>
+
 </tfoot>
 
 </table>
@@ -346,8 +549,7 @@ Date:- <span id="showDate"></span>
 </div>
 
 
-<!-- RIGHT 16-30 -->
-
+<!-- RIGHT -->
 <div class="side">
 
 <table>
@@ -363,11 +565,33 @@ Date:- <span id="showDate"></span>
 <tbody id="rightRows"></tbody>
 
 <tfoot>
+
 <tr class="total-row">
+
 <td>Total.</td>
-<td id="rightQty">0</td>
-<td id="rightWeight">0.0</td>
+
+<td>
+<input
+    class="total-input"
+    id="rightQty"
+    value="0"
+    type="number"
+    step="1"
+>
+</td>
+
+<td>
+<input
+    class="total-input"
+    id="rightWeight"
+    value="0.0"
+    type="number"
+    step="0.1"
+>
+</td>
+
 </tr>
+
 </tfoot>
 
 </table>
@@ -377,28 +601,45 @@ Date:- <span id="showDate"></span>
 </div>
 
 
-<!-- TOTAL -->
-
+<!-- COMBINED TOTAL -->
 <div class="combined">
 
 <div class="combined-line">
-Total AVG :- <span id="totalAvg">0.000</span>
+Total AVG :-
+<input
+    class="combined-input"
+    id="totalAvg"
+    value="0.000"
+>
 </div>
+
 
 <div class="combined-line">
-Total Qty :- <span id="totalQty">0</span>
+Total Qty :-
+<input
+    class="combined-input"
+    id="totalQty"
+    value="0"
+>
 </div>
+
 
 <div class="combined-line">
-Total Weight :- <span id="totalWeight">0.0</span>
+Total Weight :-
+<input
+    class="combined-input"
+    id="totalWeight"
+    value="0.0"
+>
 </div>
 
 </div>
 
 </div>
+
 
 <div class="hint">
-Save Photo કરવાથી ફક્ત bill નું photo save થશે.
+⚙️ Edit / Settings માંથી Box size, text size અને text colour બદલી શકો છો.
 </div>
 
 </div>
@@ -407,10 +648,165 @@ Save Photo કરવાથી ફક્ત bill નું photo save થશે.
 
 <script>
 
+/* =========================
+   SETTINGS
+========================= */
+
 let boxCount = 30;
 
+let boxHeight = 38;
 
-/* DATE */
+let textSize = 16;
+
+let textColor = 20;
+
+
+/* APPLY STYLE */
+
+function applyStyle(){
+
+    const root =
+    document.documentElement;
+
+    root.style.setProperty(
+        "--boxHeight",
+        boxHeight + "px"
+    );
+
+    root.style.setProperty(
+        "--boxHeightMobile",
+        Math.max(30,boxHeight - 3) + "px"
+    );
+
+    root.style.setProperty(
+        "--boxPadding",
+        Math.max(5,boxHeight / 5) + "px"
+    );
+
+    root.style.setProperty(
+        "--boxPaddingMobile",
+        Math.max(4,boxHeight / 7) + "px"
+    );
+
+    root.style.setProperty(
+        "--textSize",
+        textSize + "px"
+    );
+
+    root.style.setProperty(
+        "--mobileTextSize",
+        Math.max(11,textSize - 3) + "px"
+    );
+
+    root.style.setProperty(
+        "--textColor",
+        textColor
+    );
+
+
+    document.getElementById(
+        "boxSizeValue"
+    ).textContent = boxHeight;
+
+
+    document.getElementById(
+        "textSizeValue"
+    ).textContent = textSize;
+
+
+    document.getElementById(
+        "colorValue"
+    ).textContent = textColor;
+}
+
+
+/* BOX SIZE */
+
+function changeBoxSize(amount){
+
+    boxHeight += amount;
+
+    if(boxHeight < 28){
+        boxHeight = 28;
+    }
+
+    if(boxHeight > 70){
+        boxHeight = 70;
+    }
+
+    applyStyle();
+}
+
+
+/* TEXT SIZE */
+
+function changeTextSize(amount){
+
+    textSize += amount;
+
+    if(textSize < 11){
+        textSize = 11;
+    }
+
+    if(textSize > 28){
+        textSize = 28;
+    }
+
+    applyStyle();
+}
+
+
+/* TEXT COLOR */
+
+function changeTextColor(value){
+
+    textColor = parseInt(value);
+
+    applyStyle();
+}
+
+
+/* RESET */
+
+function resetStyle(){
+
+    boxHeight = 38;
+
+    textSize = 16;
+
+    textColor = 20;
+
+    document.getElementById(
+        "colorRange"
+    ).value = 20;
+
+    applyStyle();
+}
+
+
+/* SETTINGS OPEN */
+
+function toggleSettings(){
+
+    const box =
+    document.getElementById("settings");
+
+    if(box.style.display === "block"){
+
+        box.style.display = "none";
+
+    }else{
+
+        box.style.display = "block";
+
+    }
+
+}
+
+
+/* =========================
+   DATE
+========================= */
 
 const today = new Date();
 
@@ -418,16 +814,53 @@ document.getElementById("billDate").value =
 today.toISOString().slice(0,10);
 
 
-/* CREATE ROW */
+function showDate(){
 
-function createRow(i, values={}){
+    const value =
+    document.getElementById("billDate").value;
 
-    const tr = document.createElement("tr");
+    if(!value){
+
+        document.getElementById(
+            "showDate"
+        ).textContent = "";
+
+        return;
+    }
+
+    const [y,m,d] =
+    value.split("-");
+
+    document.getElementById(
+        "showDate"
+    ).textContent =
+    `${d} / ${m} / ${y}`;
+}
+
+
+document
+.getElementById("billDate")
+.addEventListener(
+    "change",
+    calculate
+);
+
+
+/* =========================
+   CREATE ROW
+========================= */
+
+function createRow(i,values={}){
+
+    const tr =
+    document.createElement("tr");
 
     tr.innerHTML = `
+
         <td>${i}.</td>
 
         <td>
+
             <input
                 type="number"
                 min="0"
@@ -437,9 +870,11 @@ function createRow(i, values={}){
                 value="${values.qty || ""}"
                 oninput="calculate()"
             >
+
         </td>
 
         <td>
+
             <input
                 type="number"
                 min="0"
@@ -449,28 +884,47 @@ function createRow(i, values={}){
                 value="${values.weight || ""}"
                 oninput="calculate()"
             >
+
         </td>
+
     `;
 
     return tr;
 }
 
 
-/* SAVE CURRENT VALUES */
+/* =========================
+   SAVE VALUES
+========================= */
 
 function getValues(){
 
     const values = {};
 
-    document.querySelectorAll("#billArea tbody tr").forEach(tr=>{
+    document
+    .querySelectorAll(
+        "#billArea tbody tr"
+    )
+    .forEach(tr=>{
 
-        const no = parseInt(
-            tr.children[0].textContent
+        const no =
+        parseInt(
+            tr.children[0]
+            .textContent
         );
 
         values[no] = {
-            qty: tr.querySelector(".qty").value,
-            weight: tr.querySelector(".weight").value
+
+            qty:
+            tr.querySelector(
+                ".qty"
+            ).value,
+
+            weight:
+            tr.querySelector(
+                ".weight"
+            ).value
+
         };
 
     });
@@ -479,73 +933,144 @@ function getValues(){
 }
 
 
-/* RENDER */
+/* =========================
+   RENDER ROWS
+========================= */
 
 function renderRows(values={}){
 
-    const left = document.getElementById("leftRows");
-    const right = document.getElementById("rightRows");
+    const left =
+    document.getElementById(
+        "leftRows"
+    );
+
+    const right =
+    document.getElementById(
+        "rightRows"
+    );
 
     left.innerHTML = "";
+
     right.innerHTML = "";
 
-    const leftCount = Math.ceil(boxCount / 2);
 
-    for(let i=1;i<=boxCount;i++){
+    const leftCount =
+    Math.ceil(boxCount / 2);
 
-        const row = createRow(i, values[i] || {});
+
+    for(
+        let i=1;
+        i<=boxCount;
+        i++
+    ){
+
+        const row =
+        createRow(
+            i,
+            values[i] || {}
+        );
+
 
         if(i <= leftCount){
+
             left.appendChild(row);
+
         }else{
+
             right.appendChild(row);
+
         }
 
     }
+
 
     calculate();
 }
 
 
-/* CALCULATE */
+/* =========================
+   CALCULATE
+========================= */
 
 function calculate(){
 
+    showDate();
+
+
+    const auto =
+    document.getElementById(
+        "autoTotal"
+    ).checked;
+
+
+    if(!auto){
+
+        return;
+    }
+
+
     let totalQty = 0;
+
     let totalWeight = 0;
 
     let leftQty = 0;
+
     let leftWeight = 0;
 
     let rightQty = 0;
+
     let rightWeight = 0;
 
 
-    document.querySelectorAll("#billArea tbody tr")
+    document
+    .querySelectorAll(
+        "#billArea tbody tr"
+    )
     .forEach(tr=>{
 
         const qty =
-        parseFloat(tr.querySelector(".qty").value) || 0;
+        parseFloat(
+            tr.querySelector(
+                ".qty"
+            ).value
+        ) || 0;
+
 
         const weight =
-        parseFloat(tr.querySelector(".weight").value) || 0;
+        parseFloat(
+            tr.querySelector(
+                ".weight"
+            ).value
+        ) || 0;
+
 
         const no =
-        parseInt(tr.children[0].textContent);
+        parseInt(
+            tr.children[0]
+            .textContent
+        );
 
 
         totalQty += qty;
+
         totalWeight += weight;
 
 
-        if(no <= Math.ceil(boxCount / 2)){
+        if(
+            no <=
+            Math.ceil(
+                boxCount / 2
+            )
+        ){
 
             leftQty += qty;
+
             leftWeight += weight;
 
         }else{
 
             rightQty += qty;
+
             rightWeight += weight;
 
         }
@@ -553,24 +1078,39 @@ function calculate(){
     });
 
 
-    document.getElementById("leftQty").textContent =
+    document.getElementById(
+        "leftQty"
+    ).value =
     leftQty;
 
-    document.getElementById("leftWeight").textContent =
+
+    document.getElementById(
+        "leftWeight"
+    ).value =
     leftWeight.toFixed(1);
 
 
-    document.getElementById("rightQty").textContent =
+    document.getElementById(
+        "rightQty"
+    ).value =
     rightQty;
 
-    document.getElementById("rightWeight").textContent =
+
+    document.getElementById(
+        "rightWeight"
+    ).value =
     rightWeight.toFixed(1);
 
 
-    document.getElementById("totalQty").textContent =
+    document.getElementById(
+        "totalQty"
+    ).value =
     totalQty;
 
-    document.getElementById("totalWeight").textContent =
+
+    document.getElementById(
+        "totalWeight"
+    ).value =
     totalWeight.toFixed(1);
 
 
@@ -580,43 +1120,21 @@ function calculate(){
     : 0;
 
 
-    document.getElementById("totalAvg").textContent =
+    document.getElementById(
+        "totalAvg"
+    ).value =
     avg.toFixed(3);
-
-
-    showDate();
 }
 
 
-/* SHOW DATE */
-
-function showDate(){
-
-    const value =
-    document.getElementById("billDate").value;
-
-    if(!value){
-        document.getElementById("showDate").textContent="";
-        return;
-    }
-
-    const [y,m,d] = value.split("-");
-
-    document.getElementById("showDate").textContent =
-    `${d} / ${m} / ${y}`;
-}
-
-
-document
-.getElementById("billDate")
-.addEventListener("change",calculate);
-
-
-/* ADD BOX - 2 BOX */
+/* =========================
+   ADD 2 BOX
+========================= */
 
 function addBox(){
 
-    const values = getValues();
+    const values =
+    getValues();
 
     boxCount += 2;
 
@@ -624,16 +1142,24 @@ function addBox(){
 }
 
 
-/* REMOVE BOX - 2 BOX */
+/* =========================
+   REMOVE 2 BOX
+========================= */
 
 function removeBox(){
 
     if(boxCount <= 2){
-        alert("Minimum 2 Box રાખવા જરૂરી છે.");
+
+        alert(
+            "Minimum 2 Box રાખવા જરૂરી છે."
+        );
+
         return;
     }
 
-    const values = getValues();
+
+    const values =
+    getValues();
 
     boxCount -= 2;
 
@@ -641,7 +1167,9 @@ function removeBox(){
 }
 
 
-/* NEW BILL */
+/* =========================
+   NEW BILL
+========================= */
 
 function newBill(){
 
@@ -650,24 +1178,43 @@ function newBill(){
             "New Bill બનાવવાથી બધા Qty અને Weight ખાલી થઈ જશે. Continue?"
         )
     ){
+
         return;
     }
 
+
     boxCount = 30;
 
-    document.getElementById("billDate").value =
-    new Date().toISOString().slice(0,10);
+
+    document.getElementById(
+        "billDate"
+    ).value =
+    new Date()
+    .toISOString()
+    .slice(0,10);
+
+
+    document.getElementById(
+        "autoTotal"
+    ).checked = true;
+
 
     renderRows();
 
+
     window.scrollTo({
+
         top:0,
+
         behavior:"smooth"
+
     });
 }
 
 
-/* PRINT */
+/* =========================
+   PRINT
+========================= */
 
 function printBill(){
 
@@ -677,35 +1224,58 @@ function printBill(){
 }
 
 
-/* BILL TEXT */
+/* =========================
+   BILL TEXT
+========================= */
 
 function billText(){
 
     calculate();
 
+
     let lines = [];
 
-    lines.push("WEIGHT BILL");
+
+    lines.push(
+        "WEIGHT BILL"
+    );
+
 
     lines.push(
         "Date:- " +
-        document.getElementById("showDate").textContent
+        document.getElementById(
+            "showDate"
+        ).textContent
     );
 
-    lines.push("-------------------------");
+
+    lines.push(
+        "-------------------------"
+    );
 
 
     document
-    .querySelectorAll("#billArea tbody tr")
+    .querySelectorAll(
+        "#billArea tbody tr"
+    )
     .forEach(tr=>{
 
         const q =
-        tr.querySelector(".qty").value || "";
+        tr.querySelector(
+            ".qty"
+        ).value || "";
+
 
         const w =
-        tr.querySelector(".weight").value || "";
+        tr.querySelector(
+            ".weight"
+        ).value || "";
 
-        if(q !== "" || w !== ""){
+
+        if(
+            q !== "" ||
+            w !== ""
+        ){
 
             lines.push(
                 `No. ${tr.children[0].textContent} Qty: ${q} Weight: ${w}`
@@ -716,18 +1286,33 @@ function billText(){
     });
 
 
-    lines.push("-------------------------");
-
     lines.push(
-        `Total AVG :- ${document.getElementById("totalAvg").textContent}`
+        "-------------------------"
     );
 
-    lines.push(
-        `Total Qty :- ${document.getElementById("totalQty").textContent}`
-    );
 
     lines.push(
-        `Total Weight :- ${document.getElementById("totalWeight").textContent}`
+        `Left Total :- Qty ${document.getElementById("leftQty").value} / Weight ${document.getElementById("leftWeight").value}`
+    );
+
+
+    lines.push(
+        `Right Total :- Qty ${document.getElementById("rightQty").value} / Weight ${document.getElementById("rightWeight").value}`
+    );
+
+
+    lines.push(
+        `Total AVG :- ${document.getElementById("totalAvg").value}`
+    );
+
+
+    lines.push(
+        `Total Qty :- ${document.getElementById("totalQty").value}`
+    );
+
+
+    lines.push(
+        `Total Weight :- ${document.getElementById("totalWeight").value}`
     );
 
 
@@ -735,56 +1320,87 @@ function billText(){
 }
 
 
-/* COPY */
+/* =========================
+   COPY
+========================= */
 
 async function copyBill(){
 
-    const text = billText();
+    const text =
+    billText();
+
 
     try{
 
-        await navigator.clipboard.writeText(text);
+        await navigator
+        .clipboard
+        .writeText(text);
 
-        alert("Bill text copy થઈ ગયું ✅");
+
+        alert(
+            "Bill text copy થઈ ગયું ✅"
+        );
 
     }catch(e){
 
-        prompt("આ text copy કરો:",text);
+        prompt(
+            "આ text copy કરો:",
+            text
+        );
 
     }
-
 }
 
 
-/* HTML2CANVAS */
+/* =========================
+   HTML2CANVAS
+========================= */
 
 function loadHtml2Canvas(){
 
-    return new Promise((resolve,reject)=>{
+    return new Promise(
+        (resolve,reject)=>{
 
-        if(window.html2canvas){
-            resolve();
-            return;
+            if(
+                window.html2canvas
+            ){
+
+                resolve();
+
+                return;
+            }
+
+
+            const script =
+            document.createElement(
+                "script"
+            );
+
+
+            script.src =
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+
+
+            script.onload =
+            resolve;
+
+
+            script.onerror =
+            reject;
+
+
+            document.head.appendChild(
+                script
+            );
+
         }
-
-        const script =
-        document.createElement("script");
-
-        script.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-        script.onload = resolve;
-
-        script.onerror = reject;
-
-        document.head.appendChild(script);
-
-    });
-
+    );
 }
 
 
-/* FULL HD IMAGE */
+/* =========================
+   PHOTO
+========================= */
 
 async function makePhoto(){
 
@@ -792,28 +1408,36 @@ async function makePhoto(){
 
     await loadHtml2Canvas();
 
+
     const area =
-    document.getElementById("billArea");
+    document.getElementById(
+        "billArea"
+    );
 
 
-    return await html2canvas(area,{
+    return await html2canvas(
+        area,
+        {
 
-        scale:4,
+            scale:4,
 
-        useCORS:true,
+            useCORS:true,
 
-        backgroundColor:"#ffffff",
+            backgroundColor:
+            "#ffffff",
 
-        logging:false,
+            logging:false,
 
-        imageTimeout:0
+            imageTimeout:0
 
-    });
-
+        }
+    );
 }
 
 
-/* SAVE PHOTO */
+/* =========================
+   SAVE PHOTO
+========================= */
 
 async function savePhoto(){
 
@@ -824,17 +1448,23 @@ async function savePhoto(){
 
 
         const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
 
         link.download =
         "Weight_Bill_Full_HD_" +
-        new Date().toISOString().slice(0,10) +
+        new Date()
+        .toISOString()
+        .slice(0,10) +
         ".png";
 
 
         link.href =
-        canvas.toDataURL("image/png");
+        canvas.toDataURL(
+            "image/png"
+        );
 
 
         link.click();
@@ -843,103 +1473,4 @@ async function savePhoto(){
     }catch(e){
 
         alert(
-            "Photo save કરવા Internet ON કરીને ફરી try કરો."
-        );
-
-    }
-
-}
-
-
-/* SHARE */
-
-async function shareBill(){
-
-    try{
-
-        const canvas =
-        await makePhoto();
-
-
-        const blob =
-        await new Promise(resolve =>
-            canvas.toBlob(
-                resolve,
-                "image/png"
-            )
-        );
-
-
-        const file =
-        new File(
-            [blob],
-            "Weight_Bill.png",
-            {type:"image/png"}
-        );
-
-
-        if(
-            navigator.share &&
-            (!navigator.canShare ||
-             navigator.canShare({files:[file]}))
-        ){
-
-            await navigator.share({
-
-                title:"Weight Bill",
-
-                text:billText(),
-
-                files:[file]
-
-            });
-
-        }else{
-
-            if(navigator.share){
-
-                await navigator.share({
-
-                    title:"Weight Bill",
-
-                    text:billText()
-
-                });
-
-            }else{
-
-                window.open(
-                    "https://wa.me/?text="+
-                    encodeURIComponent(billText()),
-                    "_blank"
-                );
-
-            }
-
-        }
-
-    }catch(e){
-
-        if(e.name !== "AbortError"){
-
-            window.open(
-                "https://wa.me/?text="+
-                encodeURIComponent(billText()),
-                "_blank"
-            );
-
-        }
-
-    }
-
-}
-
-
-/* START */
-
-renderRows();
-
-</script>
-
-</body>
-</html>
+            "Photo save કર
