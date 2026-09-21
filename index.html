@@ -293,14 +293,14 @@ tw+=+data[i]?.w||0;
 }
 
 document.getElementById('qty').textContent=tq;
-
+  
 document.getElementById('weight').textContent=
-tw.toFixed(1);
+tw.toFixed(1);  
 
 document.getElementById('avg').textContent=
 tq
 ?(Math.trunc(tw/tq*1000)/1000).toFixed(3)
-:'0.000';
+:  '0.000';
 
 [[L,0,h],[R,h,n]].forEach(a=>{
 
