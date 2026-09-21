@@ -1,45 +1,2871 @@
-<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Weight Bill</title>
-<style>
-body{font-family:Arial;margin:0;background:#f3f3f3}.app{max-width:1000px;margin:auto;padding:10px}
-button{padding:9px 12px;margin:3px;border:0;border-radius:7px;background:#222;color:white}
-.bill{background:white;padding:12px}.date{font-size:21px;font-weight:bold;margin:8px 0 14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bbb}
-table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;height:40px;padding:4px 8px}
-th{text-align:left}input{width:100%;border:0;outline:0;font-size:16px}
-.total td{font-weight:bold;background:#fafafa}.summary{font-size:20px;font-weight:bold;line-height:1.8;margin-top:18px}
-.summary b{display:inline-block;width:150px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.summary{font-size:17px}}
-@media print{body{background:white}.actions{display:none}.grid{grid-template-columns:1fr 1fr}.bill{padding:0}}
-</style></head><body>
-<div class="app">
-<div class="actions"><button onclick="add()">+ Add Box</button><button onclick="removeLast()">− Remove</button><button onclick="newBill()">New Bill</button><button onclick="print()">Print / Save PDF</button></div>
-<div class="bill">
-<div class="date">Date:- <span id="date"></span></div>
-<div class="grid"><table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="L"></tbody></table>
-<table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="R"></tbody></table></div>
-<div class="summary">
-<div>Total AVG :- <b id="avg">0.000</b></div>
-<div>Total Qty :- <b id="qty">0</b></div>
-<div>Total Weight :- <b id="weight">0.0</b></div>
-</div></div></div>
-<script>
-let n=30,data=JSON.parse(localStorage.getItem('wb')||'{}');n=data.n||30;data=data.d||[];
-function today(){let d=new Date();return String(d.getDate()).padStart(2,'0')+' / '+String(d.getMonth()+1).padStart(2,'0')+' / '+d.getFullYear()}
-document.getElementById('date').textContent=today();
-function draw(){
- L.innerHTML='';R.innerHTML='';let h=Math.ceil(n/2);
- for(let i=1;i<=n;i++){let t=i<=h?L:R,tr=document.createElement('tr');tr.innerHTML='<td>'+i+'.</td><td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td><td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';t.appendChild(tr);
- let x=data[i-1]||{};tr.querySelector('[data-k=q]').value=x.q||'';tr.querySelector('[data-k=w]').value=x.w||''}
- for(let t of [L,R]){let tr=document.createElement('tr');tr.className='total';tr.innerHTML='<td>Total.</td><td>0</td><td>0.0</td>';t.appendChild(tr)}
- document.querySelectorAll('input').forEach(x=>x.oninput=save);calc()
-}
-function save(){data=[];document.querySelectorAll('input').forEach(x=>{let i=+x.dataset.i;data[i-1]=data[i-1]||{};data[i-1][x.dataset.k]=x.value});localStorage.setItem('wb',JSON.stringify({n:n,d:data}));calc()}
-function calc(){let tq=0,tw=0,h=Math.ceil(n/2);for(let i=0;i<n;i++){tq+=+data[i]?.q||0;tw+=+data[i]?.w||0}
-document.getElementById('qty').textContent=tq;document.getElementById('weight').textContent=tw.toFixed(1);document.getElementById('avg').textContent=tq?(Math.trunc(tw/tq*1000)/1000).toFixed(3):'0.000';
-[[L,0,h],[R,h,n]].forEach(a=>{let q=0,w=0;for(let i=a[1];i<a[2];i++){q+=+data[i]?.q||0;w+=+data[i]?.w||0}let tr=a[0].querySelector('.total');tr.children[1].textContent=q;tr.children[2].textContent=w.toFixed(1)})}
-function add(){n++;save();draw()}function removeLast(){if(n>1){n--;data=data.slice(0,n);save();draw()}}
-function newBill(){if(confirm('Current bill clear kare?')){n=30;data=[];localStorage.removeItem('wb');document.getElementById('date').textContent=today();draw()}}
-draw();
-</script></body></html>
+<p>
+    &lt;!DOCTYPE html&gt;
+</p>
+<p>
+    &lt;html lang="en"&gt;
+</p>
+<p>
+    &lt;head&gt;
+</p>
+<p>
+    &lt;meta charset="UTF-8"&gt;
+</p>
+<p>
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"&gt;
+</p>
+<p>
+    &lt;meta name="theme-color" content="#1769aa"&gt;
+</p>
+<p>
+    &lt;meta name="mobile-web-app-capable" content="yes"&gt;
+</p>
+<p>
+    &lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;
+</p>
+<p>
+    &lt;title&gt;Weight Bill App&lt;/title&gt;
+</p>
+<p>
+    &lt;style&gt;
+</p>
+<p>
+    *{box-sizing:border-box}
+</p>
+<p>
+    body{
+</p>
+<p>
+      margin:0;
+</p>
+<p>
+      font-family:Arial,sans-serif;
+</p>
+<p>
+      background:#f2f4f7;
+</p>
+<p>
+      color:#222;
+</p>
+<p>
+    }
+</p>
+<p>
+    .app{
+</p>
+<p>
+      max-width:1100px;
+</p>
+<p>
+      margin:auto;
+</p>
+<p>
+      padding:10px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .header{
+</p>
+<p>
+      background:#1769aa;
+</p>
+<p>
+      color:#fff;
+</p>
+<p>
+      padding:15px;
+</p>
+<p>
+      border-radius:12px 12px 0 0;
+</p>
+<p>
+    }
+</p>
+<p>
+    .header h1{
+</p>
+<p>
+      margin:0 0 10px;
+</p>
+<p>
+      font-size:24px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .date-row{
+</p>
+<p>
+      display:flex;
+</p>
+<p>
+      align-items:center;
+</p>
+<p>
+      gap:8px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .date-row input{
+</p>
+<p>
+      padding:8px;
+</p>
+<p>
+      border:0;
+</p>
+<p>
+      border-radius:6px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .card{
+</p>
+<p>
+      background:#fff;
+</p>
+<p>
+      padding:10px;
+</p>
+<p>
+      border-radius:0 0 12px 12px;
+</p>
+<p>
+      box-shadow:0 2px 10px #0001;
+</p>
+<p>
+    }
+</p>
+<p>
+    .actions{
+</p>
+<p>
+      display:flex;
+</p>
+<p>
+      flex-wrap:wrap;
+</p>
+<p>
+      gap:8px;
+</p>
+<p>
+      margin-bottom:12px;
+</p>
+<p>
+    }
+</p>
+<p>
+    button{
+</p>
+<p>
+      border:0;
+</p>
+<p>
+      border-radius:8px;
+</p>
+<p>
+      padding:11px 13px;
+</p>
+<p>
+      font-size:15px;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      cursor:pointer;
+</p>
+<p>
+    }
+</p>
+<p>
+    .add{background:#198754;color:#fff}
+</p>
+<p>
+    .remove{background:#dc3545;color:#fff}
+</p>
+<p>
+    .new{background:#6c757d;color:#fff}
+</p>
+<p>
+    .print{background:#0d6efd;color:#fff}
+</p>
+<p>
+    .jpg{background:#e67e22;color:#fff}
+</p>
+<p>
+    .share{background:#25d366;color:#fff}
+</p>
+<p>
+    .copy{background:#673ab7;color:#fff}
+</p>
+<p>
+    .columns{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:1fr 1fr;
+</p>
+<p>
+      gap:10px;
+</p>
+<p>
+      align-items:start;
+</p>
+<p>
+    }
+</p>
+<p>
+    .column-title{
+</p>
+<p>
+      background:#e9f2fb;
+</p>
+<p>
+      color:#174a70;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      padding:9px;
+</p>
+<p>
+      border:1px solid #ccc;
+</p>
+<p>
+      border-radius:8px 8px 0 0;
+</p>
+<p>
+    }
+</p>
+<p>
+    .table-wrap{
+</p>
+<p>
+      overflow-x:auto;
+</p>
+<p>
+      border:1px solid #ddd;
+</p>
+<p>
+    }
+</p>
+<p>
+    table{
+</p>
+<p>
+      width:100%;
+</p>
+<p>
+      border-collapse:collapse;
+</p>
+<p>
+    }
+</p>
+<p>
+    th{
+</p>
+<p>
+      background:#e9f2fb;
+</p>
+<p>
+      color:#174a70;
+</p>
+<p>
+      padding:8px;
+</p>
+<p>
+      border:1px solid #ccc;
+</p>
+<p>
+    }
+</p>
+<p>
+    td{
+</p>
+<p>
+      padding:5px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      border:1px solid #eee;
+</p>
+<p>
+    }
+</p>
+<p>
+    td:first-child{
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      width:50px;
+</p>
+<p>
+    }
+</p>
+<p>
+    input{
+</p>
+<p>
+      width:100%;
+</p>
+<p>
+      padding:8px;
+</p>
+<p>
+      border:1px solid #ccc;
+</p>
+<p>
+      border-radius:6px;
+</p>
+<p>
+      font-size:16px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+    }
+</p>
+<p>
+    .side-totals{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:1fr 1fr;
+</p>
+<p>
+      gap:7px;
+</p>
+<p>
+      margin-top:8px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .total-box{
+</p>
+<p>
+      background:#f8f9fa;
+</p>
+<p>
+      border:1px solid #ddd;
+</p>
+<p>
+      border-radius:8px;
+</p>
+<p>
+      padding:10px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+    }
+</p>
+<p>
+    .label{
+</p>
+<p>
+      font-size:12px;
+</p>
+<p>
+      color:#666;
+</p>
+<p>
+    }
+</p>
+<p>
+    .value{
+</p>
+<p>
+      font-size:19px;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      margin-top:4px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .combined{
+</p>
+<p>
+      margin-top:14px;
+</p>
+<p>
+      border-top:3px solid #1769aa;
+</p>
+<p>
+      padding-top:10px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .combined-title{
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      color:#1769aa;
+</p>
+<p>
+      font-size:19px;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      margin-bottom:8px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .combined-totals{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:repeat(3,1fr);
+</p>
+<p>
+      gap:8px;
+</p>
+<p>
+    }
+</p>
+<p>
+    /* Hidden bill used only for JPG/Share */
+</p>
+<p>
+    #billExport{
+</p>
+<p>
+      position:absolute;
+</p>
+<p>
+      left:-100000px;
+</p>
+<p>
+      top:0;
+</p>
+<p>
+      width:1000px;
+</p>
+<p>
+      background:#fff;
+</p>
+<p>
+      padding:15px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-header{
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      border-bottom:2px solid #1769aa;
+</p>
+<p>
+      padding-bottom:8px;
+</p>
+<p>
+      margin-bottom:10px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-header h1{
+</p>
+<p>
+      margin:0;
+</p>
+<p>
+      font-size:26px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-date{
+</p>
+<p>
+      margin-top:5px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-columns{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:1fr 1fr;
+</p>
+<p>
+      gap:10px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-title{
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+      background:#e9f2fb;
+</p>
+<p>
+      padding:7px;
+</p>
+<p>
+      border:1px solid #aaa;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-table{
+</p>
+<p>
+      width:100%;
+</p>
+<p>
+      border-collapse:collapse;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-table th,
+</p>
+<p>
+    .export-table td{
+</p>
+<p>
+      border:1px solid #aaa;
+</p>
+<p>
+      padding:5px;
+</p>
+<p>
+      font-size:12px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-table th{
+</p>
+<p>
+      background:#e9f2fb;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-side{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:1fr 1fr;
+</p>
+<p>
+      gap:5px;
+</p>
+<p>
+      margin-top:5px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-side div{
+</p>
+<p>
+      border:1px solid #aaa;
+</p>
+<p>
+      padding:5px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      font-size:12px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-total{
+</p>
+<p>
+      margin-top:10px;
+</p>
+<p>
+      border:2px solid #1769aa;
+</p>
+<p>
+      padding:8px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-total-title{
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      font-weight:bold;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-total-grid{
+</p>
+<p>
+      display:grid;
+</p>
+<p>
+      grid-template-columns:repeat(3,1fr);
+</p>
+<p>
+      gap:5px;
+</p>
+<p>
+      margin-top:5px;
+</p>
+<p>
+    }
+</p>
+<p>
+    .export-total-grid div{
+</p>
+<p>
+      border:1px solid #aaa;
+</p>
+<p>
+      padding:6px;
+</p>
+<p>
+      text-align:center;
+</p>
+<p>
+      font-size:12px;
+</p>
+<p>
+    }
+</p>
+<p>
+    /* Keep both sides side-by-side */
+</p>
+<p>
+    @media(max-width:700px){
+</p>
+<p>
+      .columns{
+</p>
+<p>
+        grid-template-columns:1fr 1fr;
+</p>
+<p>
+      }
+</p>
+<p>
+      .combined-totals{
+</p>
+<p>
+        grid-template-columns:1fr;
+</p>
+<p>
+      }
+</p>
+<p>
+      button{
+</p>
+<p>
+        flex:1;
+</p>
+<p>
+        min-width:135px;
+</p>
+<p>
+      }
+</p>
+<p>
+      .header h1{
+</p>
+<p>
+        font-size:21px;
+</p>
+<p>
+      }
+</p>
+<p>
+      th,td{
+</p>
+<p>
+        font-size:12px;
+</p>
+<p>
+      }
+</p>
+<p>
+      input{
+</p>
+<p>
+        font-size:14px;
+</p>
+<p>
+        padding:7px 3px;
+</p>
+<p>
+      }
+</p>
+<p>
+    }
+</p>
+<p>
+    /* Print */
+</p>
+<p>
+    @media print{
+</p>
+<p>
+      body{
+</p>
+<p>
+        background:#fff;
+</p>
+<p>
+      }
+</p>
+<p>
+      .app{
+</p>
+<p>
+        max-width:none;
+</p>
+<p>
+      }
+</p>
+<p>
+      .actions{
+</p>
+<p>
+        display:none;
+</p>
+<p>
+      }
+</p>
+<p>
+      .card{
+</p>
+<p>
+        box-shadow:none;
+</p>
+<p>
+      }
+</p>
+<p>
+      input{
+</p>
+<p>
+        border:0;
+</p>
+<p>
+      }
+</p>
+<p>
+      .columns{
+</p>
+<p>
+        grid-template-columns:1fr 1fr;
+</p>
+<p>
+      }
+</p>
+<p>
+    }
+</p>
+<p>
+    &lt;/style&gt;
+</p>
+<p>
+    &lt;/head&gt;
+</p>
+<p>
+    &lt;body&gt;
+</p>
+<p>
+    &lt;div class="app"&gt;
+</p>
+<p>
+      &lt;div class="header"&gt;
+</p>
+<p>
+        &lt;h1&gt;Weight Bill&lt;/h1&gt;
+</p>
+<p>
+        &lt;div class="date-row"&gt;
+</p>
+<p>
+          &lt;b&gt;Date:&lt;/b&gt;
+</p>
+<p>
+          &lt;input type="date" id="billDate"&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+      &lt;/div&gt;
+</p>
+<p>
+      &lt;div class="card"&gt;
+</p>
+<p>
+        &lt;div class="actions"&gt;
+</p>
+<p>
+          &lt;button class="add" onclick="addBox()"&gt;+ Add Box&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="remove" onclick="removeBox()"&gt;− Remove Box&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="new" onclick="newBill()"&gt;New Bill&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="print" onclick="printBill()"&gt;🖨️ Print / PDF&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="jpg" onclick="saveJPG()"&gt;🖼️ Save JPG&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="share" onclick="shareBill()"&gt;📲 Share&lt;/button&gt;
+</p>
+<p>
+          &lt;button class="copy" onclick="copyBill()"&gt;📋 Copy Text&lt;/button&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+        &lt;div class="columns"&gt;
+</p>
+<p>
+          &lt;!-- LEFT SIDE --&gt;
+</p>
+<p>
+          &lt;div&gt;
+</p>
+<p>
+            &lt;div class="column-title"&gt;
+</p>
+<p>
+              Box 1 - 15
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="table-wrap"&gt;
+</p>
+<p>
+              &lt;table&gt;
+</p>
+<p>
+                &lt;thead&gt;
+</p>
+<p>
+                  &lt;tr&gt;
+</p>
+<p>
+                    &lt;th&gt;Box&lt;/th&gt;
+</p>
+<p>
+                    &lt;th&gt;Qty&lt;/th&gt;
+</p>
+<p>
+                    &lt;th&gt;Weight&lt;/th&gt;
+</p>
+<p>
+                  &lt;/tr&gt;
+</p>
+<p>
+                &lt;/thead&gt;
+</p>
+<p>
+                &lt;tbody id="leftRows"&gt;&lt;/tbody&gt;
+</p>
+<p>
+              &lt;/table&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="side-totals"&gt;
+</p>
+<p>
+              &lt;div class="total-box"&gt;
+</p>
+<p>
+                &lt;div class="label"&gt;Left Total Qty&lt;/div&gt;
+</p>
+<p>
+                &lt;div class="value" id="leftQty"&gt;0&lt;/div&gt;
+</p>
+<p>
+              &lt;/div&gt;
+</p>
+<p>
+              &lt;div class="total-box"&gt;
+</p>
+<p>
+                &lt;div class="label"&gt;Left Total Weight&lt;/div&gt;
+</p>
+<p>
+                &lt;div class="value" id="leftWeight"&gt;0.00&lt;/div&gt;
+</p>
+<p>
+              &lt;/div&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;!-- RIGHT SIDE --&gt;
+</p>
+<p>
+          &lt;div&gt;
+</p>
+<p>
+            &lt;div class="column-title"&gt;
+</p>
+<p>
+              Box 16 - 30+
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="table-wrap"&gt;
+</p>
+<p>
+              &lt;table&gt;
+</p>
+<p>
+                &lt;thead&gt;
+</p>
+<p>
+                  &lt;tr&gt;
+</p>
+<p>
+                    &lt;th&gt;Box&lt;/th&gt;
+</p>
+<p>
+                    &lt;th&gt;Qty&lt;/th&gt;
+</p>
+<p>
+                    &lt;th&gt;Weight&lt;/th&gt;
+</p>
+<p>
+                  &lt;/tr&gt;
+</p>
+<p>
+                &lt;/thead&gt;
+</p>
+<p>
+                &lt;tbody id="rightRows"&gt;&lt;/tbody&gt;
+</p>
+<p>
+              &lt;/table&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="side-totals"&gt;
+</p>
+<p>
+              &lt;div class="total-box"&gt;
+</p>
+<p>
+                &lt;div class="label"&gt;Right Total Qty&lt;/div&gt;
+</p>
+<p>
+                &lt;div class="value" id="rightQty"&gt;0&lt;/div&gt;
+</p>
+<p>
+              &lt;/div&gt;
+</p>
+<p>
+              &lt;div class="total-box"&gt;
+</p>
+<p>
+                &lt;div class="label"&gt;Right Total Weight&lt;/div&gt;
+</p>
+<p>
+                &lt;div class="value" id="rightWeight"&gt;0.00&lt;/div&gt;
+</p>
+<p>
+              &lt;/div&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+        &lt;!-- COMBINED TOTAL --&gt;
+</p>
+<p>
+        &lt;div class="combined"&gt;
+</p>
+<p>
+          &lt;div class="combined-title"&gt;
+</p>
+<p>
+            Combined Total
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;div class="combined-totals"&gt;
+</p>
+<p>
+            &lt;div class="total-box"&gt;
+</p>
+<p>
+              &lt;div class="label"&gt;Total Qty&lt;/div&gt;
+</p>
+<p>
+              &lt;div class="value" id="totalQty"&gt;0&lt;/div&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="total-box"&gt;
+</p>
+<p>
+              &lt;div class="label"&gt;Total Weight&lt;/div&gt;
+</p>
+<p>
+              &lt;div class="value" id="totalWeight"&gt;0.00&lt;/div&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div class="total-box"&gt;
+</p>
+<p>
+              &lt;div class="label"&gt;Total Avg&lt;/div&gt;
+</p>
+<p>
+              &lt;div class="value" id="totalAvg"&gt;0.00&lt;/div&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+      &lt;/div&gt;
+</p>
+<p>
+    &lt;/div&gt;
+</p>
+<p>
+    &lt;!-- =========================
+</p>
+<p>
+         BILL IMAGE EXPORT AREA
+</p>
+<p>
+         ========================= --&gt;
+</p>
+<p>
+    &lt;div id="billExport"&gt;
+</p>
+<p>
+      &lt;div class="export-header"&gt;
+</p>
+<p>
+        &lt;h1&gt;Weight Bill&lt;/h1&gt;
+</p>
+<p>
+        &lt;div class="export-date" id="exportDate"&gt;
+</p>
+<p>
+          Date: -
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+      &lt;/div&gt;
+</p>
+<p>
+      &lt;div class="export-columns"&gt;
+</p>
+<p>
+        &lt;!-- EXPORT LEFT --&gt;
+</p>
+<p>
+        &lt;div&gt;
+</p>
+<p>
+          &lt;div class="export-title"&gt;
+</p>
+<p>
+            Box 1 - 15
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;table class="export-table"&gt;
+</p>
+<p>
+            &lt;thead&gt;
+</p>
+<p>
+              &lt;tr&gt;
+</p>
+<p>
+                &lt;th&gt;Box&lt;/th&gt;
+</p>
+<p>
+                &lt;th&gt;Qty&lt;/th&gt;
+</p>
+<p>
+                &lt;th&gt;Weight&lt;/th&gt;
+</p>
+<p>
+              &lt;/tr&gt;
+</p>
+<p>
+            &lt;/thead&gt;
+</p>
+<p>
+            &lt;tbody id="exportLeft"&gt;&lt;/tbody&gt;
+</p>
+<p>
+          &lt;/table&gt;
+</p>
+<p>
+          &lt;div class="export-side"&gt;
+</p>
+<p>
+            &lt;div&gt;
+</p>
+<p>
+              Qty:
+</p>
+<p>
+              &lt;b id="exportLeftQty"&gt;0&lt;/b&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div&gt;
+</p>
+<p>
+              Weight:
+</p>
+<p>
+              &lt;b id="exportLeftWeight"&gt;0.00&lt;/b&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+        &lt;!-- EXPORT RIGHT --&gt;
+</p>
+<p>
+        &lt;div&gt;
+</p>
+<p>
+          &lt;div class="export-title"&gt;
+</p>
+<p>
+            Box 16 - 30+
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;table class="export-table"&gt;
+</p>
+<p>
+            &lt;thead&gt;
+</p>
+<p>
+              &lt;tr&gt;
+</p>
+<p>
+                &lt;th&gt;Box&lt;/th&gt;
+</p>
+<p>
+                &lt;th&gt;Qty&lt;/th&gt;
+</p>
+<p>
+                &lt;th&gt;Weight&lt;/th&gt;
+</p>
+<p>
+              &lt;/tr&gt;
+</p>
+<p>
+            &lt;/thead&gt;
+</p>
+<p>
+            &lt;tbody id="exportRight"&gt;&lt;/tbody&gt;
+</p>
+<p>
+          &lt;/table&gt;
+</p>
+<p>
+          &lt;div class="export-side"&gt;
+</p>
+<p>
+            &lt;div&gt;
+</p>
+<p>
+              Qty:
+</p>
+<p>
+              &lt;b id="exportRightQty"&gt;0&lt;/b&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+            &lt;div&gt;
+</p>
+<p>
+              Weight:
+</p>
+<p>
+              &lt;b id="exportRightWeight"&gt;0.00&lt;/b&gt;
+</p>
+<p>
+            &lt;/div&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+      &lt;/div&gt;
+</p>
+<p>
+      &lt;!-- EXPORT COMBINED TOTAL --&gt;
+</p>
+<p>
+      &lt;div class="export-total"&gt;
+</p>
+<p>
+        &lt;div class="export-total-title"&gt;
+</p>
+<p>
+          Combined Total
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+        &lt;div class="export-total-grid"&gt;
+</p>
+<p>
+          &lt;div&gt;
+</p>
+<p>
+            Total Qty&lt;br&gt;
+</p>
+<p>
+            &lt;b id="exportTotalQty"&gt;0&lt;/b&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;div&gt;
+</p>
+<p>
+            Total Weight&lt;br&gt;
+</p>
+<p>
+            &lt;b id="exportTotalWeight"&gt;0.00&lt;/b&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+          &lt;div&gt;
+</p>
+<p>
+            Total Avg&lt;br&gt;
+</p>
+<p>
+            &lt;b id="exportTotalAvg"&gt;0.00&lt;/b&gt;
+</p>
+<p>
+          &lt;/div&gt;
+</p>
+<p>
+        &lt;/div&gt;
+</p>
+<p>
+      &lt;/div&gt;
+</p>
+<p>
+    &lt;/div&gt;
+</p>
+<p>
+    &lt;script&gt;
+</p>
+<p>
+    let boxCount = 30;
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       CREATE ROW
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function createRow(number){
+</p>
+<p>
+      const tr = document.createElement("tr");
+</p>
+<p>
+      tr.dataset.box = number;
+</p>
+<p>
+      tr.innerHTML =
+</p>
+<p>
+        "&lt;td&gt;" + number + "&lt;/td&gt;" +
+</p>
+<p>
+        '&lt;td&gt;' +
+</p>
+<p>
+        '&lt;input type="number" min="0" step="1" ' +
+</p>
+<p>
+        'inputmode="numeric" class="qty" ' +
+</p>
+<p>
+        'data-box="' + number + '" ' +
+</p>
+<p>
+        'oninput="calculate()"&gt;' +
+</p>
+<p>
+        '&lt;/td&gt;' +
+</p>
+<p>
+        '&lt;td&gt;' +
+</p>
+<p>
+        '&lt;input type="number" min="0" step="0.01" ' +
+</p>
+<p>
+        'inputmode="decimal" class="weight" ' +
+</p>
+<p>
+        'data-box="' + number + '" ' +
+</p>
+<p>
+        'oninput="calculate()"&gt;' +
+</p>
+<p>
+        '&lt;/td&gt;';
+</p>
+<p>
+      return tr;
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       RENDER BOXES
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function renderRows(){
+</p>
+<p>
+      const left = document.getElementById("leftRows");
+</p>
+<p>
+      const right = document.getElementById("rightRows");
+</p>
+<p>
+      left.innerHTML = "";
+</p>
+<p>
+      right.innerHTML = "";
+</p>
+<p>
+      for(let i = 1; i &lt;= boxCount; i++){
+</p>
+<p>
+        if(i &lt;= 15){
+</p>
+<p>
+          left.appendChild(createRow(i));
+</p>
+<p>
+        }
+</p>
+<p>
+        else{
+</p>
+<p>
+          right.appendChild(createRow(i));
+</p>
+<p>
+        }
+</p>
+<p>
+      }
+</p>
+<p>
+      calculate();
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       CALCULATE TOTAL
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function calculate(){
+</p>
+<p>
+      let leftQ = 0;
+</p>
+<p>
+      let leftW = 0;
+</p>
+<p>
+      let rightQ = 0;
+</p>
+<p>
+      let rightW = 0;
+</p>
+<p>
+      document.querySelectorAll(".qty").forEach(q =&gt; {
+</p>
+<p>
+        const box = Number(q.dataset.box);
+</p>
+<p>
+        const weightInput =
+</p>
+<p>
+          document.querySelector(
+</p>
+<p>
+            '.weight[data-box="' + box + '"]'
+</p>
+<p>
+          );
+</p>
+<p>
+        const qv = parseFloat(q.value) || 0;
+</p>
+<p>
+        const wv = parseFloat(weightInput.value) || 0;
+</p>
+<p>
+        if(box &lt;= 15){
+</p>
+<p>
+          leftQ += qv;
+</p>
+<p>
+          leftW += wv;
+</p>
+<p>
+        }
+</p>
+<p>
+        else{
+</p>
+<p>
+          rightQ += qv;
+</p>
+<p>
+          rightW += wv;
+</p>
+<p>
+        }
+</p>
+<p>
+      });
+</p>
+<p>
+      const totalQ = leftQ + rightQ;
+</p>
+<p>
+      const totalW = leftW + rightW;
+</p>
+<p>
+      document.getElementById("leftQty").textContent =
+</p>
+<p>
+        leftQ;
+</p>
+<p>
+      document.getElementById("leftWeight").textContent =
+</p>
+<p>
+        leftW.toFixed(2);
+</p>
+<p>
+      document.getElementById("rightQty").textContent =
+</p>
+<p>
+        rightQ;
+</p>
+<p>
+      document.getElementById("rightWeight").textContent =
+</p>
+<p>
+        rightW.toFixed(2);
+</p>
+<p>
+      document.getElementById("totalQty").textContent =
+</p>
+<p>
+        totalQ;
+</p>
+<p>
+      document.getElementById("totalWeight").textContent =
+</p>
+<p>
+        totalW.toFixed(2);
+</p>
+<p>
+      document.getElementById("totalAvg").textContent =
+</p>
+<p>
+        totalQ
+</p>
+<p>
+          ? (totalW / totalQ).toFixed(2)
+</p>
+<p>
+          : "0.00";
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       ADD BOX
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function addBox(){
+</p>
+<p>
+      boxCount++;
+</p>
+<p>
+      const rightRows =
+</p>
+<p>
+        document.getElementById("rightRows");
+</p>
+<p>
+      rightRows.appendChild(
+</p>
+<p>
+        createRow(boxCount)
+</p>
+<p>
+      );
+</p>
+<p>
+      calculate();
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       REMOVE BOX
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function removeBox(){
+</p>
+<p>
+      if(boxCount &lt;= 1){
+</p>
+<p>
+        alert(
+</p>
+<p>
+          "कम से कम 1 Box रखना जरूरी है."
+</p>
+<p>
+        );
+</p>
+<p>
+        return;
+</p>
+<p>
+      }
+</p>
+<p>
+      const row =
+</p>
+<p>
+        document.querySelector(
+</p>
+<p>
+          'tr[data-box="' + boxCount + '"]'
+</p>
+<p>
+        );
+</p>
+<p>
+      if(row){
+</p>
+<p>
+        row.remove();
+</p>
+<p>
+      }
+</p>
+<p>
+      boxCount--;
+</p>
+<p>
+      calculate();
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       NEW BILL
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function newBill(){
+</p>
+<p>
+      if(
+</p>
+<p>
+        !confirm(
+</p>
+<p>
+          "New Bill बनाने से सभी Qty और Weight खाली हो जाएंगे. Continue?"
+</p>
+<p>
+        )
+</p>
+<p>
+      ){
+</p>
+<p>
+        return;
+</p>
+<p>
+      }
+</p>
+<p>
+      boxCount = 30;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "billDate"
+</p>
+<p>
+      ).value = "";
+</p>
+<p>
+      renderRows();
+</p>
+<p>
+      window.scrollTo({
+</p>
+<p>
+        top:0,
+</p>
+<p>
+        behavior:"smooth"
+</p>
+<p>
+      });
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       DATE
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function getDate(){
+</p>
+<p>
+      const v =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "billDate"
+</p>
+<p>
+        ).value;
+</p>
+<p>
+      if(!v){
+</p>
+<p>
+        return "-";
+</p>
+<p>
+      }
+</p>
+<p>
+      const p = v.split("-");
+</p>
+<p>
+      return (
+</p>
+<p>
+        p[2] +
+</p>
+<p>
+        "-" +
+</p>
+<p>
+        p[1] +
+</p>
+<p>
+        "-" +
+</p>
+<p>
+        p[0]
+</p>
+<p>
+      );
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       BILL TEXT
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function billText(){
+</p>
+<p>
+      calculate();
+</p>
+<p>
+      let lines = [
+</p>
+<p>
+        "WEIGHT BILL",
+</p>
+<p>
+        "Date: " + getDate(),
+</p>
+<p>
+        "--------------------"
+</p>
+<p>
+      ];
+</p>
+<p>
+      document
+</p>
+<p>
+        .querySelectorAll(
+</p>
+<p>
+          'tr[data-box]'
+</p>
+<p>
+        )
+</p>
+<p>
+        .forEach(row =&gt; {
+</p>
+<p>
+          const box =
+</p>
+<p>
+            row.dataset.box;
+</p>
+<p>
+          const q =
+</p>
+<p>
+            row.querySelector(
+</p>
+<p>
+              ".qty"
+</p>
+<p>
+            ).value || "0";
+</p>
+<p>
+          const w =
+</p>
+<p>
+            row.querySelector(
+</p>
+<p>
+              ".weight"
+</p>
+<p>
+            ).value || "0";
+</p>
+<p>
+          if(q !== "0" || w !== "0"){
+</p>
+<p>
+            lines.push(
+</p>
+<p>
+              "Box " +
+</p>
+<p>
+              box +
+</p>
+<p>
+              ": Qty " +
+</p>
+<p>
+              q +
+</p>
+<p>
+              " | Weight " +
+</p>
+<p>
+              w
+</p>
+<p>
+            );
+</p>
+<p>
+          }
+</p>
+<p>
+        });
+</p>
+<p>
+      lines.push(
+</p>
+<p>
+        "--------------------"
+</p>
+<p>
+      );
+</p>
+<p>
+      lines.push(
+</p>
+<p>
+        "Total Qty: " +
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalQty"
+</p>
+<p>
+        ).textContent
+</p>
+<p>
+      );
+</p>
+<p>
+      lines.push(
+</p>
+<p>
+        "Total Weight: " +
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalWeight"
+</p>
+<p>
+        ).textContent
+</p>
+<p>
+      );
+</p>
+<p>
+      lines.push(
+</p>
+<p>
+        "Total Avg: " +
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalAvg"
+</p>
+<p>
+        ).textContent
+</p>
+<p>
+      );
+</p>
+<p>
+      return lines.join("\n");
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       COPY TEXT
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    async function copyBill(){
+</p>
+<p>
+      const text = billText();
+</p>
+<p>
+      try{
+</p>
+<p>
+        await navigator.clipboard.writeText(
+</p>
+<p>
+          text
+</p>
+<p>
+        );
+</p>
+<p>
+        alert(
+</p>
+<p>
+          "Bill text copy ho gaya ✅"
+</p>
+<p>
+        );
+</p>
+<p>
+      }
+</p>
+<p>
+      catch(e){
+</p>
+<p>
+        prompt(
+</p>
+<p>
+          "Is text ko copy karo:",
+</p>
+<p>
+          text
+</p>
+<p>
+        );
+</p>
+<p>
+      }
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       PREPARE JPG BILL
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function prepareExport(){
+</p>
+<p>
+      calculate();
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportDate"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        "Date: " + getDate();
+</p>
+<p>
+      const left =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "exportLeft"
+</p>
+<p>
+        );
+</p>
+<p>
+      const right =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "exportRight"
+</p>
+<p>
+        );
+</p>
+<p>
+      left.innerHTML = "";
+</p>
+<p>
+      right.innerHTML = "";
+</p>
+<p>
+      document
+</p>
+<p>
+        .querySelectorAll(
+</p>
+<p>
+          'tr[data-box]'
+</p>
+<p>
+        )
+</p>
+<p>
+        .forEach(row =&gt; {
+</p>
+<p>
+          const box =
+</p>
+<p>
+            Number(row.dataset.box);
+</p>
+<p>
+          const q =
+</p>
+<p>
+            row.querySelector(
+</p>
+<p>
+              ".qty"
+</p>
+<p>
+            ).value || "0";
+</p>
+<p>
+          const w =
+</p>
+<p>
+            row.querySelector(
+</p>
+<p>
+              ".weight"
+</p>
+<p>
+            ).value || "0";
+</p>
+<p>
+          const tr =
+</p>
+<p>
+            document.createElement(
+</p>
+<p>
+              "tr"
+</p>
+<p>
+            );
+</p>
+<p>
+          tr.innerHTML =
+</p>
+<p>
+            "&lt;td&gt;" +
+</p>
+<p>
+            box +
+</p>
+<p>
+            "&lt;/td&gt;" +
+</p>
+<p>
+            "&lt;td&gt;" +
+</p>
+<p>
+            q +
+</p>
+<p>
+            "&lt;/td&gt;" +
+</p>
+<p>
+            "&lt;td&gt;" +
+</p>
+<p>
+            w +
+</p>
+<p>
+            "&lt;/td&gt;";
+</p>
+<p>
+          if(box &lt;= 15){
+</p>
+<p>
+            left.appendChild(tr);
+</p>
+<p>
+          }
+</p>
+<p>
+          else{
+</p>
+<p>
+            right.appendChild(tr);
+</p>
+<p>
+          }
+</p>
+<p>
+        });
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportLeftQty"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "leftQty"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportLeftWeight"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "leftWeight"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportRightQty"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "rightQty"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportRightWeight"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "rightWeight"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportTotalQty"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalQty"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportTotalWeight"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalWeight"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+      document.getElementById(
+</p>
+<p>
+        "exportTotalAvg"
+</p>
+<p>
+      ).textContent =
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "totalAvg"
+</p>
+<p>
+        ).textContent;
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       LOAD HTML2CANVAS
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function loadHtml2Canvas(){
+</p>
+<p>
+      return new Promise(
+</p>
+<p>
+        (resolve,reject) =&gt; {
+</p>
+<p>
+          if(window.html2canvas){
+</p>
+<p>
+            resolve();
+</p>
+<p>
+            return;
+</p>
+<p>
+          }
+</p>
+<p>
+          const s =
+</p>
+<p>
+            document.createElement(
+</p>
+<p>
+              "script"
+</p>
+<p>
+            );
+</p>
+<p>
+          s.src =
+</p>
+<p>
+            "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+</p>
+<p>
+          s.onload = resolve;
+</p>
+<p>
+          s.onerror = reject;
+</p>
+<p>
+          document.head.appendChild(s);
+</p>
+<p>
+        }
+</p>
+<p>
+      );
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       MAKE JPG CANVAS
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    async function makeJPG(){
+</p>
+<p>
+      prepareExport();
+</p>
+<p>
+      await loadHtml2Canvas();
+</p>
+<p>
+      return await html2canvas(
+</p>
+<p>
+        document.getElementById(
+</p>
+<p>
+          "billExport"
+</p>
+<p>
+        ),
+</p>
+<p>
+        {
+</p>
+<p>
+          scale:3,
+</p>
+<p>
+          useCORS:true,
+</p>
+<p>
+          backgroundColor:"#ffffff",
+</p>
+<p>
+          logging:false
+</p>
+<p>
+        }
+</p>
+<p>
+      );
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       SAVE JPG
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    async function saveJPG(){
+</p>
+<p>
+      try{
+</p>
+<p>
+        const canvas =
+</p>
+<p>
+          await makeJPG();
+</p>
+<p>
+        const link =
+</p>
+<p>
+          document.createElement(
+</p>
+<p>
+            "a"
+</p>
+<p>
+          );
+</p>
+<p>
+        link.download =
+</p>
+<p>
+          "Weight_Bill_" +
+</p>
+<p>
+          new Date()
+</p>
+<p>
+            .toISOString()
+</p>
+<p>
+            .slice(0,10) +
+</p>
+<p>
+          ".jpg";
+</p>
+<p>
+        link.href =
+</p>
+<p>
+          canvas.toDataURL(
+</p>
+<p>
+            "image/jpeg",
+</p>
+<p>
+            0.95
+</p>
+<p>
+          );
+</p>
+<p>
+        link.click();
+</p>
+<p>
+      }
+</p>
+<p>
+      catch(e){
+</p>
+<p>
+        alert(
+</p>
+<p>
+          "JPG banane me problem aayi. Internet ON karke dobara try kare."
+</p>
+<p>
+        );
+</p>
+<p>
+      }
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       SHARE
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    async function shareBill(){
+</p>
+<p>
+      try{
+</p>
+<p>
+        const canvas =
+</p>
+<p>
+          await makeJPG();
+</p>
+<p>
+        const blob =
+</p>
+<p>
+          await new Promise(
+</p>
+<p>
+            resolve =&gt;
+</p>
+<p>
+              canvas.toBlob(
+</p>
+<p>
+                resolve,
+</p>
+<p>
+                "image/jpeg",
+</p>
+<p>
+                0.95
+</p>
+<p>
+              )
+</p>
+<p>
+          );
+</p>
+<p>
+        const file =
+</p>
+<p>
+          new File(
+</p>
+<p>
+            [blob],
+</p>
+<p>
+            "Weight_Bill.jpg",
+</p>
+<p>
+            {
+</p>
+<p>
+              type:"image/jpeg"
+</p>
+<p>
+            }
+</p>
+<p>
+          );
+</p>
+<p>
+        if(
+</p>
+<p>
+          navigator.share &amp;&amp;
+</p>
+<p>
+          navigator.canShare &amp;&amp;
+</p>
+<p>
+          navigator.canShare({
+</p>
+<p>
+            files:[file]
+</p>
+<p>
+          })
+</p>
+<p>
+        ){
+</p>
+<p>
+          await navigator.share({
+</p>
+<p>
+            title:"Weight Bill",
+</p>
+<p>
+            files:[file]
+</p>
+<p>
+          });
+</p>
+<p>
+        }
+</p>
+<p>
+        else if(navigator.share){
+</p>
+<p>
+          await navigator.share({
+</p>
+<p>
+            title:"Weight Bill",
+</p>
+<p>
+            text:billText()
+</p>
+<p>
+          });
+</p>
+<p>
+        }
+</p>
+<p>
+        else{
+</p>
+<p>
+          window.open(
+</p>
+<p>
+            "https://wa.me/?text=" +
+</p>
+<p>
+            encodeURIComponent(
+</p>
+<p>
+              billText()
+</p>
+<p>
+            ),
+</p>
+<p>
+            "_blank"
+</p>
+<p>
+          );
+</p>
+<p>
+        }
+</p>
+<p>
+      }
+</p>
+<p>
+      catch(e){
+</p>
+<p>
+        if(
+</p>
+<p>
+          e.name !== "AbortError"
+</p>
+<p>
+        ){
+</p>
+<p>
+          window.open(
+</p>
+<p>
+            "https://wa.me/?text=" +
+</p>
+<p>
+            encodeURIComponent(
+</p>
+<p>
+              billText()
+</p>
+<p>
+            ),
+</p>
+<p>
+            "_blank"
+</p>
+<p>
+          );
+</p>
+<p>
+        }
+</p>
+<p>
+      }
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       PRINT
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    function printBill(){
+</p>
+<p>
+      calculate();
+</p>
+<p>
+      window.print();
+</p>
+<p>
+    }
+</p>
+<p>
+    /* =========================
+</p>
+<p>
+       START APP
+</p>
+<p>
+       ========================= */
+</p>
+<p>
+    document.getElementById(
+</p>
+<p>
+      "billDate"
+</p>
+<p>
+    ).value =
+</p>
+<p>
+      new Date()
+</p>
+<p>
+        .toISOString()
+</p>
+<p>
+        .slice(0,10);
+</p>
+<p>
+    renderRows();
+</p>
+<p>
+    &lt;/script&gt;
+</p>
+<p>
+    &lt;/body&gt;
+</p>
+<p>
+    &lt;/html&gt;
+</p>
