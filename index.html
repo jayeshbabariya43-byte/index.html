@@ -3,68 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weight Bill</title>
+<title>Weight Bill App</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f2f4f7;
-  color:#222;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f2f4f7;
+    color:#222;
 }
 
 .app{
-  max-width:1100px;
-  margin:auto;
-  padding:10px;
+    max-width:1100px;
+    margin:auto;
+    padding:10px;
 }
 
 .header{
-  background:#1769aa;
-  color:white;
-  padding:15px;
-  border-radius:12px 12px 0 0;
+    background:#1769aa;
+    color:white;
+    padding:15px;
+    border-radius:12px 12px 0 0;
 }
 
 .header h1{
-  margin:0 0 10px;
-  font-size:24px;
+    margin:0 0 10px;
+    font-size:24px;
 }
 
 .date-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
 .date-row input{
-  padding:8px;
-  border:0;
-  border-radius:6px;
+    padding:8px;
+    border:0;
+    border-radius:6px;
 }
 
 .card{
-  background:white;
-  padding:10px;
-  border-radius:0 0 12px 12px;
-  box-shadow:0 2px 10px #0001;
+    background:white;
+    padding:10px;
+    border-radius:0 0 12px 12px;
+    box-shadow:0 2px 10px #0001;
 }
 
 .actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:12px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:12px;
 }
 
 button{
-  border:0;
-  border-radius:8px;
-  padding:11px 13px;
-  font-size:15px;
-  font-weight:bold;
+    border:0;
+    border-radius:8px;
+    padding:11px 13px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 .add{background:#198754;color:white}
@@ -76,190 +77,255 @@ button{
 .copy{background:#673ab7;color:white}
 
 .columns{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  align-items:start;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    align-items:start;
 }
 
 .column-title{
-  background:#e9f2fb;
-  color:#174a70;
-  text-align:center;
-  font-weight:bold;
-  padding:9px;
-  border:1px solid #ccc;
+    background:#e9f2fb;
+    color:#174a70;
+    text-align:center;
+    font-weight:bold;
+    padding:9px;
+    border:1px solid #ccc;
+    border-radius:8px 8px 0 0;
 }
 
 .table-wrap{
-  overflow-x:auto;
-  border:1px solid #ddd;
+    overflow-x:auto;
+    border:1px solid #ddd;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
+    width:100%;
+    border-collapse:collapse;
 }
 
 th{
-  background:#e9f2fb;
-  color:#174a70;
-  padding:8px;
-  border:1px solid #ccc;
+    background:#e9f2fb;
+    color:#174a70;
+    padding:8px;
+    border:1px solid #ccc;
 }
 
 td{
-  padding:5px;
-  text-align:center;
-  border:1px solid #eee;
+    padding:5px;
+    text-align:center;
+    border:1px solid #eee;
 }
 
 td:first-child{
-  font-weight:bold;
-  width:50px;
+    font-weight:bold;
+    width:50px;
 }
 
 input{
-  width:100%;
-  padding:8px;
-  border:1px solid #ccc;
-  border-radius:6px;
-  font-size:16px;
-  text-align:center;
+    width:100%;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+    text-align:center;
 }
 
 .side-totals{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin-top:8px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:8px;
 }
 
 .total-box{
-  background:#f8f9fa;
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:center;
+    background:#f8f9fa;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:10px;
+    text-align:center;
 }
 
 .label{
-  font-size:12px;
-  color:#666;
+    font-size:12px;
+    color:#666;
 }
 
 .value{
-  font-size:19px;
-  font-weight:bold;
-  margin-top:4px;
+    font-size:19px;
+    font-weight:bold;
+    margin-top:4px;
 }
 
 .combined{
-  margin-top:14px;
-  border-top:3px solid #1769aa;
-  padding-top:10px;
+    margin-top:14px;
+    border-top:3px solid #1769aa;
+    padding-top:10px;
 }
 
 .combined-title{
-  text-align:center;
-  color:#1769aa;
-  font-size:19px;
-  font-weight:bold;
+    text-align:center;
+    color:#1769aa;
+    font-size:19px;
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
 .combined-totals{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
 }
 
-/* JPG EXPORT */
+/* Export Bill */
 #billExport{
-  position:absolute;
-  left:-100000px;
-  top:0;
-  width:1100px;
-  background:white;
-  padding:35px 40px;
-  color:#111;
+    position:absolute;
+    left:-100000px;
+    top:0;
+    width:1000px;
+    background:white;
+    padding:15px;
+}
+
+.export-header{
+    text-align:center;
+    border-bottom:2px solid #1769aa;
+    padding-bottom:8px;
+    margin-bottom:10px;
+}
+
+.export-header h1{
+    margin:0;
+    font-size:26px;
 }
 
 .export-date{
-  font-size:24px;
-  font-weight:bold;
-  margin-bottom:25px;
+    margin-top:5px;
+}
+
+.export-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.export-title{
+    text-align:center;
+    font-weight:bold;
+    background:#e9f2fb;
+    padding:7px;
+    border:1px solid #aaa;
 }
 
 .export-table{
-  width:100%;
-  border-collapse:collapse;
-  table-layout:fixed;
+    width:100%;
+    border-collapse:collapse;
 }
 
 .export-table th,
 .export-table td{
-  border:1px solid #bbb;
-  padding:10px;
-  height:45px;
-  font-size:17px;
-  text-align:left;
+    border:1px solid #aaa;
+    padding:5px;
+    font-size:12px;
+    text-align:center;
 }
 
 .export-table th{
-  background:white;
-  color:#111;
-  font-weight:bold;
+    background:#e9f2fb;
 }
 
-.export-table .num{
-  width:9%;
+.export-side{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:5px;
 }
 
-.export-table .qty{
-  width:18%;
+.export-side div{
+    border:1px solid #aaa;
+    padding:5px;
+    text-align:center;
+    font-size:12px;
 }
 
-.export-table .weight{
-  width:23%;
+.export-total{
+    margin-top:10px;
+    border:2px solid #1769aa;
+    padding:8px;
 }
 
-.export-table .total-row td{
-  font-weight:bold;
-  height:50px;
+.export-total-title{
+    text-align:center;
+    font-weight:bold;
 }
 
-.export-bottom{
-  margin-top:25px;
-  font-size:22px;
-  font-weight:bold;
-  line-height:1.8;
+.export-total-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+    margin-top:5px;
+}
+
+.export-total-grid div{
+    border:1px solid #aaa;
+    padding:6px;
+    text-align:center;
+    font-size:12px;
 }
 
 @media(max-width:700px){
-  .columns{
-    grid-template-columns:1fr 1fr;
-  }
 
-  button{
-    flex:1;
-    min-width:135px;
-  }
+    .columns{
+        grid-template-columns:1fr 1fr;
+    }
 
-  th,td{
-    font-size:12px;
-  }
+    .combined-totals{
+        grid-template-columns:1fr;
+    }
 
-  input{
-    font-size:14px;
-    padding:7px 3px;
-  }
+    button{
+        flex:1;
+        min-width:135px;
+    }
+
+    .header h1{
+        font-size:21px;
+    }
+
+    th,td{
+        font-size:12px;
+    }
+
+    input{
+        font-size:14px;
+        padding:7px 3px;
+    }
 }
 
 @media print{
-  body{background:white}
-  .app{max-width:none}
-  .actions{display:none}
-  .card{box-shadow:none}
-  input{border:0}
+
+    body{
+        background:white;
+    }
+
+    .app{
+        max-width:none;
+    }
+
+    .actions{
+        display:none;
+    }
+
+    .card{
+        box-shadow:none;
+    }
+
+    input{
+        border:0;
+    }
+
+    .columns{
+        grid-template-columns:1fr 1fr;
+    }
 }
 </style>
 </head>
@@ -268,185 +334,336 @@ input{
 
 <div class="app">
 
-  <div class="header">
+<div class="header">
     <h1>Weight Bill</h1>
 
     <div class="date-row">
-      <b>Date:</b>
-      <input type="date" id="billDate">
+        <b>Date:</b>
+        <input type="date" id="billDate">
     </div>
-  </div>
+</div>
 
-  <div class="card">
+<div class="card">
 
-    <div class="actions">
-      <button class="add" onclick="addBox()">+ Add Box</button>
-      <button class="remove" onclick="removeBox()">− Remove Box</button>
-      <button class="new" onclick="newBill()">New Bill</button>
-      <button class="print" onclick="printBill()">🖨️ Print / PDF</button>
-      <button class="jpg" onclick="saveJPG()">🖼️ Save JPG</button>
-      <button class="share" onclick="shareBill()">📲 Share</button>
-      <button class="copy" onclick="copyBill()">📋 Copy Text</button>
-    </div>
+<div class="actions">
 
-    <div class="columns">
+<button class="add" onclick="addBox()">+ Add Box</button>
 
-      <!-- LEFT -->
-      <div>
+<button class="remove" onclick="removeBox()">− Remove Box</button>
 
-        <div class="column-title">
-          Box 1 - 15
-        </div>
+<button class="new" onclick="newBill()">New Bill</button>
 
-        <div class="table-wrap">
+<button class="print" onclick="printBill()">🖨️ Print / PDF</button>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Box</th>
-                <th>Qty</th>
-                <th>Weight</th>
-              </tr>
-            </thead>
+<button class="jpg" onclick="saveJPG()">🖼️ Save JPG</button>
 
-            <tbody id="leftRows"></tbody>
+<button class="share" onclick="shareBill()">📲 Share</button>
 
-          </table>
-
-        </div>
-
-        <div class="side-totals">
-
-          <div class="total-box">
-            <div class="label">Left Total Qty</div>
-            <div class="value" id="leftQty">0</div>
-          </div>
-
-          <div class="total-box">
-            <div class="label">Left Total Weight</div>
-            <div class="value" id="leftWeight">0.00</div>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- RIGHT -->
-      <div>
-
-        <div class="column-title">
-          Box 16 - 30+
-        </div>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Box</th>
-                <th>Qty</th>
-                <th>Weight</th>
-              </tr>
-            </thead>
-
-            <tbody id="rightRows"></tbody>
-
-          </table>
-
-        </div>
-
-        <div class="side-totals">
-
-          <div class="total-box">
-            <div class="label">Right Total Qty</div>
-            <div class="value" id="rightQty">0</div>
-          </div>
-
-          <div class="total-box">
-            <div class="label">Right Total Weight</div>
-            <div class="value" id="rightWeight">0.00</div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="combined">
-
-      <div class="combined-title">
-        Combined Total
-      </div>
-
-      <div class="combined-totals">
-
-        <div class="total-box">
-          <div class="label">Total Qty</div>
-          <div class="value" id="totalQty">0</div>
-        </div>
-
-        <div class="total-box">
-          <div class="label">Total Weight</div>
-          <div class="value" id="totalWeight">0.00</div>
-        </div>
-
-        <div class="total-box">
-          <div class="label">Total Avg</div>
-          <div class="value" id="totalAvg">0.00</div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+<button class="copy" onclick="copyBill()">📋 Copy Text</button>
 
 </div>
 
 
-<!-- JPG BILL -->
+<div class="columns">
+
+<!-- LEFT -->
+
+<div>
+
+<div class="column-title">
+Box 1 - 15
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Box</th>
+<th>Qty</th>
+<th>Weight</th>
+</tr>
+
+</thead>
+
+<tbody id="leftRows"></tbody>
+
+</table>
+
+</div>
+
+<div class="side-totals">
+
+<div class="total-box">
+
+<div class="label">
+Left Total Qty
+</div>
+
+<div class="value" id="leftQty">
+0
+</div>
+
+</div>
+
+<div class="total-box">
+
+<div class="label">
+Left Total Weight
+</div>
+
+<div class="value" id="leftWeight">
+0.00
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT -->
+
+<div>
+
+<div class="column-title">
+Box 16 - 30+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Box</th>
+<th>Qty</th>
+<th>Weight</th>
+</tr>
+
+</thead>
+
+<tbody id="rightRows"></tbody>
+
+</table>
+
+</div>
+
+<div class="side-totals">
+
+<div class="total-box">
+
+<div class="label">
+Right Total Qty
+</div>
+
+<div class="value" id="rightQty">
+0
+</div>
+
+</div>
+
+<div class="total-box">
+
+<div class="label">
+Right Total Weight
+</div>
+
+<div class="value" id="rightWeight">
+0.00
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- COMBINED TOTAL -->
+
+<div class="combined">
+
+<div class="combined-title">
+Combined Total
+</div>
+
+<div class="combined-totals">
+
+<div class="total-box">
+
+<div class="label">
+Total Qty
+</div>
+
+<div class="value" id="totalQty">
+0
+</div>
+
+</div>
+
+<div class="total-box">
+
+<div class="label">
+Total Weight
+</div>
+
+<div class="value" id="totalWeight">
+0.00
+</div>
+
+</div>
+
+<div class="total-box">
+
+<div class="label">
+Total Avg
+</div>
+
+<div class="value" id="totalAvg">
+0.00
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- JPG EXPORT -->
+
 <div id="billExport">
 
-  <div class="export-date" id="exportDate">
-    Date:- 21 / 09 / 2026
-  </div>
+<div class="export-header">
 
-  <table class="export-table">
+<h1>Weight Bill</h1>
 
-    <thead>
+<div class="export-date" id="exportDate">
+Date: -
+</div>
 
-      <tr>
-
-        <th class="num">No.</th>
-        <th class="qty">Qty.</th>
-        <th class="weight">Weight.</th>
-
-        <th class="num">No.</th>
-        <th class="qty">Qty.</th>
-        <th class="weight">Weight.</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody id="exportRows"></tbody>
-
-  </table>
+</div>
 
 
-  <div class="export-bottom">
+<div class="export-columns">
 
-    Total AVG :- <span id="exportTotalAvg">0.000</span><br>
 
-    Total Qty :- <span id="exportTotalQty">0</span><br>
+<div>
 
-    Total Weight :- <span id="exportTotalWeight">0.0</span>
+<div class="export-title">
+Box 1 - 15
+</div>
 
-  </div>
+<table class="export-table">
+
+<thead>
+
+<tr>
+<th>Box</th>
+<th>Qty</th>
+<th>Weight</th>
+</tr>
+
+</thead>
+
+<tbody id="exportLeft"></tbody>
+
+</table>
+
+<div class="export-side">
+
+<div>
+Qty:
+<b id="exportLeftQty">0</b>
+</div>
+
+<div>
+Weight:
+<b id="exportLeftWeight">0.00</b>
+</div>
+
+</div>
+
+</div>
+
+
+<div>
+
+<div class="export-title">
+Box 16 - 30+
+</div>
+
+<table class="export-table">
+
+<thead>
+
+<tr>
+<th>Box</th>
+<th>Qty</th>
+<th>Weight</th>
+</tr>
+
+</thead>
+
+<tbody id="exportRight"></tbody>
+
+</table>
+
+<div class="export-side">
+
+<div>
+Qty:
+<b id="exportRightQty">0</b>
+</div>
+
+<div>
+Weight:
+<b id="exportRightWeight">0.00</b>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="export-total">
+
+<div class="export-total-title">
+Combined Total
+</div>
+
+<div class="export-total-grid">
+
+<div>
+Total Qty<br>
+<b id="exportTotalQty">0</b>
+</div>
+
+<div>
+Total Weight<br>
+<b id="exportTotalWeight">0.00</b>
+</div>
+
+<div>
+Total Avg<br>
+<b id="exportTotalAvg">0.00</b>
+</div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -457,700 +674,601 @@ let boxCount = 30;
 
 
 /* CREATE ROW */
+
 function createRow(number){
 
-  const tr = document.createElement("tr");
+const tr = document.createElement("tr");
 
-  tr.dataset.box = number;
+tr.dataset.box = number;
 
-  tr.innerHTML =
-    "<td>"+number+"</td>" +
+tr.innerHTML =
 
-    '<td>' +
-    '<input type="number" min="0" step="1" ' +
-    'inputmode="numeric" class="qty" ' +
-    'data-box="'+number+'" oninput="calculate()">' +
-    '</td>' +
+"<td>"+number+"</td>"+
 
-    '<td>' +
-    '<input type="number" min="0" step="0.01" ' +
-    'inputmode="decimal" class="weight" ' +
-    'data-box="'+number+'" oninput="calculate()">' +
-    '</td>';
+'<td><input type="number" min="0" step="1" inputmode="numeric" class="qty" data-box="'+number+'" oninput="calculate()"></td>'+
 
-  return tr;
+'<td><input type="number" min="0" step="0.01" inputmode="decimal" class="weight" data-box="'+number+'" oninput="calculate()"></td>';
+
+return tr;
+
 }
 
 
-/* SHOW ROWS */
+/* SHOW BOXES */
+
 function renderRows(){
 
-  const left =
-    document.getElementById("leftRows");
+const left =
+document.getElementById("leftRows");
 
-  const right =
-    document.getElementById("rightRows");
+const right =
+document.getElementById("rightRows");
 
-  left.innerHTML="";
-  right.innerHTML="";
+left.innerHTML = "";
 
-  for(let i=1;i<=boxCount;i++){
+right.innerHTML = "";
 
-    if(i<=15){
+for(let i=1;i<=boxCount;i++){
 
-      left.appendChild(
-        createRow(i)
-      );
+if(i<=15){
 
-    }else{
+left.appendChild(createRow(i));
 
-      right.appendChild(
-        createRow(i)
-      );
+}else{
 
-    }
+right.appendChild(createRow(i));
 
-  }
+}
 
-  calculate();
+}
+
+calculate();
+
 }
 
 
-/* CALCULATE TOTAL */
+/* CALCULATE */
+
 function calculate(){
 
-  let leftQ=0;
-  let leftW=0;
+let leftQ=0;
+let leftW=0;
 
-  let rightQ=0;
-  let rightW=0;
-
-  document.querySelectorAll(".qty").forEach(q=>{
-
-    const box =
-      Number(q.dataset.box);
-
-    const wEl =
-      document.querySelector(
-        '.weight[data-box="'+box+'"]'
-      );
-
-    const qv =
-      parseFloat(q.value)||0;
-
-    const wv =
-      parseFloat(wEl.value)||0;
-
-    if(box<=15){
-
-      leftQ += qv;
-      leftW += wv;
-
-    }else{
-
-      rightQ += qv;
-      rightW += wv;
-
-    }
-
-  });
+let rightQ=0;
+let rightW=0;
 
 
-  const totalQ =
-    leftQ + rightQ;
+document.querySelectorAll(".qty").forEach(q=>{
 
-  const totalW =
-    leftW + rightW;
+const box =
+Number(q.dataset.box);
 
+const wEl =
+document.querySelector(
+'.weight[data-box="'+box+'"]'
+);
 
-  document.getElementById("leftQty")
-    .textContent = leftQ;
+const qv =
+parseFloat(q.value)||0;
 
-  document.getElementById("leftWeight")
-    .textContent = leftW.toFixed(2);
-
-
-  document.getElementById("rightQty")
-    .textContent = rightQ;
-
-  document.getElementById("rightWeight")
-    .textContent = rightW.toFixed(2);
+const wv =
+parseFloat(wEl.value)||0;
 
 
-  document.getElementById("totalQty")
-    .textContent = totalQ;
+if(box<=15){
 
-  document.getElementById("totalWeight")
-    .textContent = totalW.toFixed(2);
+leftQ += qv;
+leftW += wv;
 
-  document.getElementById("totalAvg")
-    .textContent =
-    totalQ
-    ? (totalW/totalQ).toFixed(2)
-    : "0.00";
+}else{
+
+rightQ += qv;
+rightW += wv;
+
+}
+
+});
+
+
+const totalQ =
+leftQ + rightQ;
+
+const totalW =
+leftW + rightW;
+
+
+document.getElementById("leftQty")
+.textContent = leftQ;
+
+document.getElementById("leftWeight")
+.textContent = leftW.toFixed(2);
+
+
+document.getElementById("rightQty")
+.textContent = rightQ;
+
+document.getElementById("rightWeight")
+.textContent = rightW.toFixed(2);
+
+
+document.getElementById("totalQty")
+.textContent = totalQ;
+
+document.getElementById("totalWeight")
+.textContent = totalW.toFixed(2);
+
+
+document.getElementById("totalAvg")
+.textContent =
+totalQ
+? (totalW/totalQ).toFixed(2)
+: "0.00";
+
 }
 
 
 /* ADD BOX */
+
 function addBox(){
 
-  boxCount++;
+boxCount++;
 
-  document
-    .getElementById("rightRows")
-    .appendChild(
-      createRow(boxCount)
-    );
+document
+.getElementById("rightRows")
+.appendChild(createRow(boxCount));
 
-  calculate();
+calculate();
+
 }
 
 
 /* REMOVE BOX */
+
 function removeBox(){
 
-  if(boxCount<=1){
+if(boxCount<=1){
 
-    alert(
-      "कम से कम 1 Box रखना जरूरी है."
-    );
+alert("कम से कम 1 Box रखना जरूरी है.");
 
-    return;
-  }
+return;
 
-  const row =
-    document.querySelector(
-      'tr[data-box="'+boxCount+'"]'
-    );
+}
 
-  if(row){
+const row =
+document.querySelector(
+'tr[data-box="'+boxCount+'"]'
+);
 
-    row.remove();
+if(row) row.remove();
 
-  }
+boxCount--;
 
-  boxCount--;
+calculate();
 
-  calculate();
 }
 
 
 /* NEW BILL */
+
 function newBill(){
 
-  if(
-    !confirm(
-      "New Bill बनाने से सभी Qty और Weight खाली हो जाएंगे. Continue?"
-    )
-  ){
+if(!confirm(
+"New Bill बनाने से सभी Qty और Weight खाली हो जाएंगे. Continue?"
+)) return;
 
-    return;
+boxCount=30;
 
-  }
+document.getElementById("billDate").value="";
 
-  boxCount=30;
+renderRows();
 
-  document.getElementById("billDate")
-    .value =
-    new Date()
-    .toISOString()
-    .slice(0,10);
-
-  renderRows();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 }
 
 
 /* DATE */
+
 function getDate(){
 
-  const v =
-    document.getElementById("billDate").value;
+const v =
+document.getElementById("billDate").value;
 
-  if(!v){
+if(!v) return "-";
 
-    return "-";
+const p=v.split("-");
 
-  }
+return p[2]+"-"+p[1]+"-"+p[0];
 
-  const p =
-    v.split("-");
-
-  return p[2]+" / "+p[1]+" / "+p[0];
 }
 
 
-/* TEXT */
+/* BILL TEXT */
+
 function billText(){
 
-  calculate();
+calculate();
 
-  let lines = [
-    "WEIGHT BILL",
-    "Date: "+getDate(),
-    "--------------------"
-  ];
+let lines=[
 
-  document
-    .querySelectorAll(
-      'tr[data-box]'
-    )
-    .forEach(row=>{
+"WEIGHT BILL",
 
-      const box =
-        row.dataset.box;
+"Date: "+getDate(),
 
-      const q =
-        row.querySelector(".qty")
-        .value || "0";
+"--------------------"
 
-      const w =
-        row.querySelector(".weight")
-        .value || "0";
-
-      if(q!=="0" || w!=="0"){
-
-        lines.push(
-          "Box "+box+
-          ": Qty "+q+
-          " | Weight "+w
-        );
-
-      }
-
-    });
+];
 
 
-  lines.push(
-    "--------------------"
-  );
+document.querySelectorAll(
+'tr[data-box]'
+).forEach(row=>{
 
-  lines.push(
-    "Total Qty: "+
-    document.getElementById("totalQty")
-      .textContent
-  );
+const box =
+row.dataset.box;
 
-  lines.push(
-    "Total Weight: "+
-    document.getElementById("totalWeight")
-      .textContent
-  );
+const q =
+row.querySelector(".qty").value || "0";
 
-  lines.push(
-    "Total Avg: "+
-    document.getElementById("totalAvg")
-      .textContent
-  );
+const w =
+row.querySelector(".weight").value || "0";
 
-  return lines.join("\n");
+
+if(q!=="0" || w!=="0"){
+
+lines.push(
+"Box "+box+
+": Qty "+q+
+" | Weight "+w
+);
+
+}
+
+});
+
+
+lines.push(
+"--------------------"
+);
+
+lines.push(
+"Total Qty: "+
+document.getElementById("totalQty").textContent
+);
+
+lines.push(
+"Total Weight: "+
+document.getElementById("totalWeight").textContent
+);
+
+lines.push(
+"Total Avg: "+
+document.getElementById("totalAvg").textContent
+);
+
+return lines.join("\n");
+
 }
 
 
 /* COPY */
+
 async function copyBill(){
 
-  const text =
-    billText();
+const text=billText();
 
-  try{
+try{
 
-    await navigator.clipboard
-      .writeText(text);
+await navigator.clipboard.writeText(text);
 
-    alert(
-      "Bill text copy ho gaya ✅"
-    );
+alert("Bill text copy ho gaya ✅");
 
-  }catch(e){
+}catch(e){
 
-    prompt(
-      "Is text ko copy karo:",
-      text
-    );
+prompt(
+"Is text ko copy karo:",
+text
+);
 
-  }
+}
 
 }
 
 
 /* PREPARE JPG */
+
 function prepareExport(){
 
-  calculate();
+calculate();
+
+document.getElementById("exportDate")
+.textContent =
+"Date: "+getDate();
 
 
-  document.getElementById("exportDate")
-    .textContent =
-    "Date:- "+getDate();
+const left =
+document.getElementById("exportLeft");
+
+const right =
+document.getElementById("exportRight");
+
+left.innerHTML="";
+right.innerHTML="";
 
 
-  const tbody =
-    document.getElementById(
-      "exportRows"
-    );
+document.querySelectorAll(
+'tr[data-box]'
+).forEach(row=>{
 
-  tbody.innerHTML="";
+const box =
+Number(row.dataset.box);
 
+const q =
+row.querySelector(".qty").value || "0";
 
-  /*
-    1-15 LEFT
-    16-30 RIGHT
-  */
-
-  for(let i=1;i<=15;i++){
-
-    const leftRow =
-      document.querySelector(
-        'tr[data-box="'+i+'"]'
-      );
-
-    const rightRow =
-      document.querySelector(
-        'tr[data-box="'+(i+15)+'"]'
-      );
+const w =
+row.querySelector(".weight").value || "0";
 
 
-    let lq="";
-    let lw="";
-
-    let rq="";
-    let rw="";
+const tr =
+document.createElement("tr");
 
 
-    if(leftRow){
-
-      lq =
-        leftRow
-        .querySelector(".qty")
-        .value || "";
-
-      lw =
-        leftRow
-        .querySelector(".weight")
-        .value || "";
-
-    }
+tr.innerHTML =
+"<td>"+box+
+"</td><td>"+q+
+"</td><td>"+w+
+"</td>";
 
 
-    if(rightRow){
+if(box<=15){
 
-      rq =
-        rightRow
-        .querySelector(".qty")
-        .value || "";
+left.appendChild(tr);
 
-      rw =
-        rightRow
-        .querySelector(".weight")
-        .value || "";
+}else{
 
-    }
+right.appendChild(tr);
+
+}
+
+});
 
 
-    const tr =
-      document.createElement("tr");
+document.getElementById("exportLeftQty")
+.textContent =
+document.getElementById("leftQty").textContent;
+
+document.getElementById("exportLeftWeight")
+.textContent =
+document.getElementById("leftWeight").textContent;
 
 
-    tr.innerHTML =
-      "<td>"+i+".</td>" +
-      "<td>"+lq+"</td>" +
-      "<td>"+lw+"</td>" +
+document.getElementById("exportRightQty")
+.textContent =
+document.getElementById("rightQty").textContent;
 
-      "<td>"+(i+15)+".</td>" +
-      "<td>"+rq+"</td>" +
-      "<td>"+rw+"</td>";
-
-
-    tbody.appendChild(tr);
-
-  }
+document.getElementById("exportRightWeight")
+.textContent =
+document.getElementById("rightWeight").textContent;
 
 
-  /* TOTAL ROW */
+document.getElementById("exportTotalQty")
+.textContent =
+document.getElementById("totalQty").textContent;
 
-  const totalRow =
-    document.createElement("tr");
+document.getElementById("exportTotalWeight")
+.textContent =
+document.getElementById("totalWeight").textContent;
 
-  totalRow.className =
-    "total-row";
-
-
-  totalRow.innerHTML =
-
-    "<td>Total.</td>" +
-
-    "<td>"+
-    document.getElementById("leftQty")
-      .textContent+
-    "</td>" +
-
-    "<td>"+
-    document.getElementById("leftWeight")
-      .textContent+
-    "</td>" +
-
-    "<td>Total.</td>" +
-
-    "<td>"+
-    document.getElementById("rightQty")
-      .textContent+
-    "</td>" +
-
-    "<td>"+
-    document.getElementById("rightWeight")
-      .textContent+
-    "</td>";
-
-
-  tbody.appendChild(totalRow);
-
-
-  document.getElementById(
-    "exportTotalAvg"
-  ).textContent =
-    document.getElementById(
-      "totalAvg"
-    ).textContent;
-
-
-  document.getElementById(
-    "exportTotalQty"
-  ).textContent =
-    document.getElementById(
-      "totalQty"
-    ).textContent;
-
-
-  document.getElementById(
-    "exportTotalWeight"
-  ).textContent =
-    document.getElementById(
-      "totalWeight"
-    ).textContent;
+document.getElementById("exportTotalAvg")
+.textContent =
+document.getElementById("totalAvg").textContent;
 
 }
 
 
-/* LOAD HTML2CANVAS */
+/* LOAD JPG LIBRARY */
+
 function loadHtml2Canvas(){
 
-  return new Promise(
-    (resolve,reject)=>{
+return new Promise((resolve,reject)=>{
 
-      if(window.html2canvas){
-
-        resolve();
-
-        return;
-
-      }
+if(window.html2canvas)
+return resolve();
 
 
-      const s =
-        document.createElement(
-          "script"
-        );
+const s =
+document.createElement("script");
 
+s.src =
+"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
 
-      s.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+s.onload=resolve;
 
+s.onerror=reject;
 
-      s.onload=resolve;
+document.head.appendChild(s);
 
-      s.onerror=reject;
-
-      document.head.appendChild(s);
-
-    }
-  );
+});
 
 }
 
 
 /* MAKE JPG */
+
 async function makeJPG(){
 
-  prepareExport();
+prepareExport();
 
-  await loadHtml2Canvas();
+await loadHtml2Canvas();
 
 
-  return await html2canvas(
+return await html2canvas(
 
-    document.getElementById(
-      "billExport"
-    ),
+document.getElementById("billExport"),
 
-    {
-      scale:3,
-      useCORS:true,
-      backgroundColor:"#ffffff",
-      logging:false
-    }
+{
 
-  );
+scale:3,
+
+useCORS:true,
+
+backgroundColor:"#ffffff",
+
+logging:false
+
+}
+
+);
 
 }
 
 
 /* SAVE JPG */
+
 async function saveJPG(){
 
-  try{
+try{
 
-    const canvas =
-      await makeJPG();
-
-
-    const link =
-      document.createElement("a");
+const canvas =
+await makeJPG();
 
 
-    link.download =
-      "Weight_Bill_"+
-      new Date()
-      .toISOString()
-      .slice(0,10)+
-      ".jpg";
+const link =
+document.createElement("a");
 
 
-    link.href =
-      canvas.toDataURL(
-        "image/jpeg",
-        0.95
-      );
+link.download =
+"Weight_Bill_"+
+new Date()
+.toISOString()
+.slice(0,10)+
+".jpg";
 
 
-    link.click();
+link.href =
+canvas.toDataURL(
+"image/jpeg",
+0.95
+);
 
 
-  }catch(e){
+link.click();
 
-    alert(
-      "JPG banane me problem aayi. Internet ON karke dobara try kare."
-    );
 
-  }
+}catch(e){
+
+alert(
+"JPG banane me problem aayi. Internet ON karke dobara try kare."
+);
+
+}
 
 }
 
 
 /* SHARE */
+
 async function shareBill(){
 
-  try{
+try{
 
-    const canvas =
-      await makeJPG();
-
-
-    const blob =
-      await new Promise(
-        resolve =>
-        canvas.toBlob(
-          resolve,
-          "image/jpeg",
-          0.95
-        )
-      );
+const canvas =
+await makeJPG();
 
 
-    const file =
-      new File(
-        [blob],
-        "Weight_Bill.jpg",
-        {
-          type:"image/jpeg"
-        }
-      );
+const blob =
+await new Promise(
+resolve =>
+canvas.toBlob(
+resolve,
+"image/jpeg",
+0.95
+)
+);
 
 
-    if(
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({
-        files:[file]
-      })
-    ){
+const file =
+new File(
+[blob],
+"Weight_Bill.jpg",
+{type:"image/jpeg"}
+);
 
-      await navigator.share({
 
-        title:"Weight Bill",
+if(
+navigator.share &&
+navigator.canShare &&
+navigator.canShare({files:[file]})
+){
 
-        files:[file]
+await navigator.share({
 
-      });
+title:"Weight Bill",
 
-    }
+files:[file]
 
-    else if(
-      navigator.share
-    ){
+});
 
-      await navigator.share({
+}
 
-        title:"Weight Bill",
+else if(navigator.share){
 
-        text:billText()
+await navigator.share({
 
-      });
+title:"Weight Bill",
 
-    }
+text:billText()
 
-    else{
+});
 
-      window.open(
-        "https://wa.me/?text="+
-        encodeURIComponent(
-          billText()
-        ),
-        "_blank"
-      );
+}
 
-    }
+else{
 
-  }catch(e){
+window.open(
+"https://wa.me/?text="+
+encodeURIComponent(billText()),
+"_blank"
+);
 
-    if(
-      e.name!=="AbortError"
-    ){
+}
 
-      window.open(
-        "https://wa.me/?text="+
-        encodeURIComponent(
-          billText()
-        ),
-        "_blank"
-      );
+}catch(e){
 
-    }
+if(e.name!=="AbortError"){
 
-  }
+window.open(
+"https://wa.me/?text="+
+encodeURIComponent(billText()),
+"_blank"
+);
+
+}
+
+}
 
 }
 
 
 /* PRINT */
+
 function printBill(){
 
-  calculate();
+calculate();
 
-  window.print();
+window.print();
 
 }
 
 
 /* START */
-document.getElementById(
-  "billDate"
-).value =
+
+document.getElementById("billDate")
+.value =
 new Date()
 .toISOString()
 .slice(0,10);
