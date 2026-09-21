@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Weight Bill</title>
+<title>JB weight Bill</title>
 
 <style>
 body{font-family:Arial;margin:0;background:#f3f3f3;color:#000}
@@ -37,6 +37,10 @@ outline:0;
 color:#000;
 background:white;
 width:145px
+}
+
+.dateText{
+margin-left:11px;
 }
 
 .grid{
@@ -75,7 +79,6 @@ background:#fafafa;
 color:#000
 }
 
-/* TOTAL ALIGNMENT */
 .summary{
 font-size:24px;
 font-weight:bold;
@@ -134,8 +137,8 @@ border:0;
 <div class="bill">
 
 <div class="date">
-Date :-
-<input type="date" id="date">
+Date :- <span id="dateText" class="dateText"></span>
+<input type="date" id="date" style="position:absolute;opacity:0;width:1px;height:1px;">
 </div>
 
 <div class="grid">
@@ -195,22 +198,53 @@ n=data.n||30;
 data=data.d||[];
 
 let dateInput=document.getElementById('date');
+let dateText=document.getElementById('dateText');
 
 let savedDate=localStorage.getItem('wb_date');
 
 if(savedDate){
 dateInput.value=savedDate;
 }else{
+
 let d=new Date();
 
 dateInput.value=
 d.getFullYear()+'-'+
 String(d.getMonth()+1).padStart(2,'0')+'-'+
 String(d.getDate()).padStart(2,'0');
+
 }
 
+function showDate(){
+
+let v=dateInput.value;
+
+if(!v)return;
+
+let p=v.split('-');
+
+let year=p[0];
+let month=p[1];
+let day=p[2];
+
+dateText.textContent=
+day+' / '+month+' / '+year;
+}
+
+showDate();
+
+dateText.onclick=function(){
+dateInput.showPicker();
+};
+
 dateInput.onchange=function(){
-localStorage.setItem('wb_date',this.value);
+
+localStorage.setItem(
+'wb_date',
+this.value
+);
+
+showDate();
 };
 
 function draw(){
@@ -236,6 +270,7 @@ let x=data[i-1]||{};
 
 tr.querySelector('[data-k=q]').value=x.q||'';
 tr.querySelector('[data-k=w]').value=x.w||'';
+
 }
 
 for(let t of [L,R]){
@@ -250,12 +285,14 @@ tr.innerHTML=
 '<td>0.0</td>';
 
 t.appendChild(tr);
+
 }
 
 document.querySelectorAll('input[data-i]')
 .forEach(x=>x.oninput=save);
 
 calc();
+
 }
 
 function save(){
@@ -270,6 +307,7 @@ let i=+x.dataset.i;
 data[i-1]=data[i-1]||{};
 
 data[i-1][x.dataset.k]=x.value;
+
 });
 
 localStorage.setItem(
@@ -278,6 +316,7 @@ JSON.stringify({n:n,d:data})
 );
 
 calc();
+
 }
 
 function calc(){
@@ -290,6 +329,7 @@ for(let i=0;i<n;i++){
 
 tq+=+data[i]?.q||0;
 tw+=+data[i]?.w||0;
+
 }
 
 document.getElementById('qty').textContent=tq;
@@ -311,6 +351,7 @@ for(let i=a[1];i<a[2];i++){
 
 q+=+data[i]?.q||0;
 w+=+data[i]?.w||0;
+
 }
 
 let tr=a[0].querySelector('.total');
@@ -319,22 +360,28 @@ tr.children[1].textContent=q;
 tr.children[2].textContent=w.toFixed(1);
 
 });
+
 }
 
 function add(){
+
 n++;
 save();
 draw();
+
 }
 
 function removeLast(){
 
 if(n>1){
+
 n--;
 data=data.slice(0,n);
 save();
 draw();
+
 }
+
 }
 
 function newBill(){
@@ -353,10 +400,17 @@ d.getFullYear()+'-'+
 String(d.getMonth()+1).padStart(2,'0')+'-'+
 String(d.getDate()).padStart(2,'0');
 
-localStorage.setItem('wb_date',dateInput.value);
+localStorage.setItem(
+'wb_date',
+dateInput.value
+);
+
+showDate();
 
 draw();
+
 }
+
 }
 
 draw();
