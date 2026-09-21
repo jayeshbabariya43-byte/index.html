@@ -1,45 +1,1163 @@
-<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weight Bill</title>
+
 <style>
-body{font-family:Arial;margin:0;background:#f3f3f3}.app{max-width:1000px;margin:auto;padding:10px}
-button{padding:9px 12px;margin:3px;border:0;border-radius:7px;background:#222;color:white}
-.bill{background:white;padding:12px}.date{font-size:21px;font-weight:bold;margin:8px 0 14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bbb}
-table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;height:40px;padding:4px 8px}
-th{text-align:left}input{width:100%;border:0;outline:0;font-size:16px}
-.total td{font-weight:bold;background:#fafafa}.summary{font-size:20px;font-weight:bold;line-height:1.8;margin-top:18px}
-.summary b{display:inline-block;width:150px}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.summary{font-size:17px}}
-@media print{body{background:white}.actions{display:none}.grid{grid-template-columns:1fr 1fr}.bill{padding:0}}
-</style></head><body>
-<div class="app">
-<div class="actions"><button onclick="add()">+ Add Box</button><button onclick="removeLast()">− Remove</button><button onclick="newBill()">New Bill</button><button onclick="print()">Print / Save PDF</button></div>
-<div class="bill">
-<div class="date">Date:- <span id="date"></span></div>
-<div class="grid"><table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="L"></tbody></table>
-<table><thead><tr><th>No.</th><th>Qty.</th><th>Weight.</th></tr></thead><tbody id="R"></tbody></table></div>
-<div class="summary">
-<div>Total AVG :- <b id="avg">0.000</b></div>
-<div>Total Qty :- <b id="qty">0</b></div>
-<div>Total Weight :- <b id="weight">0.0</b></div>
-</div></div></div>
-<script>
-let n=30,data=JSON.parse(localStorage.getItem('wb')||'{}');n=data.n||30;data=data.d||[];
-function today(){let d=new Date();return String(d.getDate()).padStart(2,'0')+' / '+String(d.getMonth()+1).padStart(2,'0')+' / '+d.getFullYear()}
-document.getElementById('date').textContent=today();
-function draw(){
- L.innerHTML='';R.innerHTML='';let h=Math.ceil(n/2);
- for(let i=1;i<=n;i++){let t=i<=h?L:R,tr=document.createElement('tr');tr.innerHTML='<td>'+i+'.</td><td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td><td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';t.appendChild(tr);
- let x=data[i-1]||{};tr.querySelector('[data-k=q]').value=x.q||'';tr.querySelector('[data-k=w]').value=x.w||''}
- for(let t of [L,R]){let tr=document.createElement('tr');tr.className='total';tr.innerHTML='<td>Total.</td><td>0</td><td>0.0</td>';t.appendChild(tr)}
- document.querySelectorAll('input').forEach(x=>x.oninput=save);calc()
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f2f4f7;
+  color:#222;
 }
-function save(){data=[];document.querySelectorAll('input').forEach(x=>{let i=+x.dataset.i;data[i-1]=data[i-1]||{};data[i-1][x.dataset.k]=x.value});localStorage.setItem('wb',JSON.stringify({n:n,d:data}));calc()}
-function calc(){let tq=0,tw=0,h=Math.ceil(n/2);for(let i=0;i<n;i++){tq+=+data[i]?.q||0;tw+=+data[i]?.w||0}
-document.getElementById('qty').textContent=tq;document.getElementById('weight').textContent=tw.toFixed(1);document.getElementById('avg').textContent=tq?(Math.trunc(tw/tq*1000)/1000).toFixed(3):'0.000';
-[[L,0,h],[R,h,n]].forEach(a=>{let q=0,w=0;for(let i=a[1];i<a[2];i++){q+=+data[i]?.q||0;w+=+data[i]?.w||0}let tr=a[0].querySelector('.total');tr.children[1].textContent=q;tr.children[2].textContent=w.toFixed(1)})}
-function add(){n++;save();draw()}function removeLast(){if(n>1){n--;data=data.slice(0,n);save();draw()}}
-function newBill(){if(confirm('Current bill clear kare?')){n=30;data=[];localStorage.removeItem('wb');document.getElementById('date').textContent=today();draw()}}
-draw();
-</script></body></html>
+
+.app{
+  max-width:1100px;
+  margin:auto;
+  padding:10px;
+}
+
+.header{
+  background:#1769aa;
+  color:white;
+  padding:15px;
+  border-radius:12px 12px 0 0;
+}
+
+.header h1{
+  margin:0 0 10px;
+  font-size:24px;
+}
+
+.date-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.date-row input{
+  padding:8px;
+  border:0;
+  border-radius:6px;
+}
+
+.card{
+  background:white;
+  padding:10px;
+  border-radius:0 0 12px 12px;
+  box-shadow:0 2px 10px #0001;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:11px 13px;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.add{background:#198754;color:white}
+.remove{background:#dc3545;color:white}
+.new{background:#6c757d;color:white}
+.print{background:#0d6efd;color:white}
+.jpg{background:#e67e22;color:white}
+.share{background:#25d366;color:white}
+.copy{background:#673ab7;color:white}
+
+.columns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  align-items:start;
+}
+
+.column-title{
+  background:#e9f2fb;
+  color:#174a70;
+  text-align:center;
+  font-weight:bold;
+  padding:9px;
+  border:1px solid #ccc;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  border:1px solid #ddd;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#e9f2fb;
+  color:#174a70;
+  padding:8px;
+  border:1px solid #ccc;
+}
+
+td{
+  padding:5px;
+  text-align:center;
+  border:1px solid #eee;
+}
+
+td:first-child{
+  font-weight:bold;
+  width:50px;
+}
+
+input{
+  width:100%;
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  font-size:16px;
+  text-align:center;
+}
+
+.side-totals{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:8px;
+}
+
+.total-box{
+  background:#f8f9fa;
+  border:1px solid #ddd;
+  padding:10px;
+  text-align:center;
+}
+
+.label{
+  font-size:12px;
+  color:#666;
+}
+
+.value{
+  font-size:19px;
+  font-weight:bold;
+  margin-top:4px;
+}
+
+.combined{
+  margin-top:14px;
+  border-top:3px solid #1769aa;
+  padding-top:10px;
+}
+
+.combined-title{
+  text-align:center;
+  color:#1769aa;
+  font-size:19px;
+  font-weight:bold;
+}
+
+.combined-totals{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+/* JPG EXPORT */
+#billExport{
+  position:absolute;
+  left:-100000px;
+  top:0;
+  width:1100px;
+  background:white;
+  padding:35px 40px;
+  color:#111;
+}
+
+.export-date{
+  font-size:24px;
+  font-weight:bold;
+  margin-bottom:25px;
+}
+
+.export-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+
+.export-table th,
+.export-table td{
+  border:1px solid #bbb;
+  padding:10px;
+  height:45px;
+  font-size:17px;
+  text-align:left;
+}
+
+.export-table th{
+  background:white;
+  color:#111;
+  font-weight:bold;
+}
+
+.export-table .num{
+  width:9%;
+}
+
+.export-table .qty{
+  width:18%;
+}
+
+.export-table .weight{
+  width:23%;
+}
+
+.export-table .total-row td{
+  font-weight:bold;
+  height:50px;
+}
+
+.export-bottom{
+  margin-top:25px;
+  font-size:22px;
+  font-weight:bold;
+  line-height:1.8;
+}
+
+@media(max-width:700px){
+  .columns{
+    grid-template-columns:1fr 1fr;
+  }
+
+  button{
+    flex:1;
+    min-width:135px;
+  }
+
+  th,td{
+    font-size:12px;
+  }
+
+  input{
+    font-size:14px;
+    padding:7px 3px;
+  }
+}
+
+@media print{
+  body{background:white}
+  .app{max-width:none}
+  .actions{display:none}
+  .card{box-shadow:none}
+  input{border:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <h1>Weight Bill</h1>
+
+    <div class="date-row">
+      <b>Date:</b>
+      <input type="date" id="billDate">
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="actions">
+      <button class="add" onclick="addBox()">+ Add Box</button>
+      <button class="remove" onclick="removeBox()">− Remove Box</button>
+      <button class="new" onclick="newBill()">New Bill</button>
+      <button class="print" onclick="printBill()">🖨️ Print / PDF</button>
+      <button class="jpg" onclick="saveJPG()">🖼️ Save JPG</button>
+      <button class="share" onclick="shareBill()">📲 Share</button>
+      <button class="copy" onclick="copyBill()">📋 Copy Text</button>
+    </div>
+
+    <div class="columns">
+
+      <!-- LEFT -->
+      <div>
+
+        <div class="column-title">
+          Box 1 - 15
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+            <thead>
+              <tr>
+                <th>Box</th>
+                <th>Qty</th>
+                <th>Weight</th>
+              </tr>
+            </thead>
+
+            <tbody id="leftRows"></tbody>
+
+          </table>
+
+        </div>
+
+        <div class="side-totals">
+
+          <div class="total-box">
+            <div class="label">Left Total Qty</div>
+            <div class="value" id="leftQty">0</div>
+          </div>
+
+          <div class="total-box">
+            <div class="label">Left Total Weight</div>
+            <div class="value" id="leftWeight">0.00</div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RIGHT -->
+      <div>
+
+        <div class="column-title">
+          Box 16 - 30+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Box</th>
+                <th>Qty</th>
+                <th>Weight</th>
+              </tr>
+            </thead>
+
+            <tbody id="rightRows"></tbody>
+
+          </table>
+
+        </div>
+
+        <div class="side-totals">
+
+          <div class="total-box">
+            <div class="label">Right Total Qty</div>
+            <div class="value" id="rightQty">0</div>
+          </div>
+
+          <div class="total-box">
+            <div class="label">Right Total Weight</div>
+            <div class="value" id="rightWeight">0.00</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="combined">
+
+      <div class="combined-title">
+        Combined Total
+      </div>
+
+      <div class="combined-totals">
+
+        <div class="total-box">
+          <div class="label">Total Qty</div>
+          <div class="value" id="totalQty">0</div>
+        </div>
+
+        <div class="total-box">
+          <div class="label">Total Weight</div>
+          <div class="value" id="totalWeight">0.00</div>
+        </div>
+
+        <div class="total-box">
+          <div class="label">Total Avg</div>
+          <div class="value" id="totalAvg">0.00</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- JPG BILL -->
+<div id="billExport">
+
+  <div class="export-date" id="exportDate">
+    Date:- 21 / 09 / 2026
+  </div>
+
+  <table class="export-table">
+
+    <thead>
+
+      <tr>
+
+        <th class="num">No.</th>
+        <th class="qty">Qty.</th>
+        <th class="weight">Weight.</th>
+
+        <th class="num">No.</th>
+        <th class="qty">Qty.</th>
+        <th class="weight">Weight.</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="exportRows"></tbody>
+
+  </table>
+
+
+  <div class="export-bottom">
+
+    Total AVG :- <span id="exportTotalAvg">0.000</span><br>
+
+    Total Qty :- <span id="exportTotalQty">0</span><br>
+
+    Total Weight :- <span id="exportTotalWeight">0.0</span>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let boxCount = 30;
+
+
+/* CREATE ROW */
+function createRow(number){
+
+  const tr = document.createElement("tr");
+
+  tr.dataset.box = number;
+
+  tr.innerHTML =
+    "<td>"+number+"</td>" +
+
+    '<td>' +
+    '<input type="number" min="0" step="1" ' +
+    'inputmode="numeric" class="qty" ' +
+    'data-box="'+number+'" oninput="calculate()">' +
+    '</td>' +
+
+    '<td>' +
+    '<input type="number" min="0" step="0.01" ' +
+    'inputmode="decimal" class="weight" ' +
+    'data-box="'+number+'" oninput="calculate()">' +
+    '</td>';
+
+  return tr;
+}
+
+
+/* SHOW ROWS */
+function renderRows(){
+
+  const left =
+    document.getElementById("leftRows");
+
+  const right =
+    document.getElementById("rightRows");
+
+  left.innerHTML="";
+  right.innerHTML="";
+
+  for(let i=1;i<=boxCount;i++){
+
+    if(i<=15){
+
+      left.appendChild(
+        createRow(i)
+      );
+
+    }else{
+
+      right.appendChild(
+        createRow(i)
+      );
+
+    }
+
+  }
+
+  calculate();
+}
+
+
+/* CALCULATE TOTAL */
+function calculate(){
+
+  let leftQ=0;
+  let leftW=0;
+
+  let rightQ=0;
+  let rightW=0;
+
+  document.querySelectorAll(".qty").forEach(q=>{
+
+    const box =
+      Number(q.dataset.box);
+
+    const wEl =
+      document.querySelector(
+        '.weight[data-box="'+box+'"]'
+      );
+
+    const qv =
+      parseFloat(q.value)||0;
+
+    const wv =
+      parseFloat(wEl.value)||0;
+
+    if(box<=15){
+
+      leftQ += qv;
+      leftW += wv;
+
+    }else{
+
+      rightQ += qv;
+      rightW += wv;
+
+    }
+
+  });
+
+
+  const totalQ =
+    leftQ + rightQ;
+
+  const totalW =
+    leftW + rightW;
+
+
+  document.getElementById("leftQty")
+    .textContent = leftQ;
+
+  document.getElementById("leftWeight")
+    .textContent = leftW.toFixed(2);
+
+
+  document.getElementById("rightQty")
+    .textContent = rightQ;
+
+  document.getElementById("rightWeight")
+    .textContent = rightW.toFixed(2);
+
+
+  document.getElementById("totalQty")
+    .textContent = totalQ;
+
+  document.getElementById("totalWeight")
+    .textContent = totalW.toFixed(2);
+
+  document.getElementById("totalAvg")
+    .textContent =
+    totalQ
+    ? (totalW/totalQ).toFixed(2)
+    : "0.00";
+}
+
+
+/* ADD BOX */
+function addBox(){
+
+  boxCount++;
+
+  document
+    .getElementById("rightRows")
+    .appendChild(
+      createRow(boxCount)
+    );
+
+  calculate();
+}
+
+
+/* REMOVE BOX */
+function removeBox(){
+
+  if(boxCount<=1){
+
+    alert(
+      "कम से कम 1 Box रखना जरूरी है."
+    );
+
+    return;
+  }
+
+  const row =
+    document.querySelector(
+      'tr[data-box="'+boxCount+'"]'
+    );
+
+  if(row){
+
+    row.remove();
+
+  }
+
+  boxCount--;
+
+  calculate();
+}
+
+
+/* NEW BILL */
+function newBill(){
+
+  if(
+    !confirm(
+      "New Bill बनाने से सभी Qty और Weight खाली हो जाएंगे. Continue?"
+    )
+  ){
+
+    return;
+
+  }
+
+  boxCount=30;
+
+  document.getElementById("billDate")
+    .value =
+    new Date()
+    .toISOString()
+    .slice(0,10);
+
+  renderRows();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* DATE */
+function getDate(){
+
+  const v =
+    document.getElementById("billDate").value;
+
+  if(!v){
+
+    return "-";
+
+  }
+
+  const p =
+    v.split("-");
+
+  return p[2]+" / "+p[1]+" / "+p[0];
+}
+
+
+/* TEXT */
+function billText(){
+
+  calculate();
+
+  let lines = [
+    "WEIGHT BILL",
+    "Date: "+getDate(),
+    "--------------------"
+  ];
+
+  document
+    .querySelectorAll(
+      'tr[data-box]'
+    )
+    .forEach(row=>{
+
+      const box =
+        row.dataset.box;
+
+      const q =
+        row.querySelector(".qty")
+        .value || "0";
+
+      const w =
+        row.querySelector(".weight")
+        .value || "0";
+
+      if(q!=="0" || w!=="0"){
+
+        lines.push(
+          "Box "+box+
+          ": Qty "+q+
+          " | Weight "+w
+        );
+
+      }
+
+    });
+
+
+  lines.push(
+    "--------------------"
+  );
+
+  lines.push(
+    "Total Qty: "+
+    document.getElementById("totalQty")
+      .textContent
+  );
+
+  lines.push(
+    "Total Weight: "+
+    document.getElementById("totalWeight")
+      .textContent
+  );
+
+  lines.push(
+    "Total Avg: "+
+    document.getElementById("totalAvg")
+      .textContent
+  );
+
+  return lines.join("\n");
+}
+
+
+/* COPY */
+async function copyBill(){
+
+  const text =
+    billText();
+
+  try{
+
+    await navigator.clipboard
+      .writeText(text);
+
+    alert(
+      "Bill text copy ho gaya ✅"
+    );
+
+  }catch(e){
+
+    prompt(
+      "Is text ko copy karo:",
+      text
+    );
+
+  }
+
+}
+
+
+/* PREPARE JPG */
+function prepareExport(){
+
+  calculate();
+
+
+  document.getElementById("exportDate")
+    .textContent =
+    "Date:- "+getDate();
+
+
+  const tbody =
+    document.getElementById(
+      "exportRows"
+    );
+
+  tbody.innerHTML="";
+
+
+  /*
+    1-15 LEFT
+    16-30 RIGHT
+  */
+
+  for(let i=1;i<=15;i++){
+
+    const leftRow =
+      document.querySelector(
+        'tr[data-box="'+i+'"]'
+      );
+
+    const rightRow =
+      document.querySelector(
+        'tr[data-box="'+(i+15)+'"]'
+      );
+
+
+    let lq="";
+    let lw="";
+
+    let rq="";
+    let rw="";
+
+
+    if(leftRow){
+
+      lq =
+        leftRow
+        .querySelector(".qty")
+        .value || "";
+
+      lw =
+        leftRow
+        .querySelector(".weight")
+        .value || "";
+
+    }
+
+
+    if(rightRow){
+
+      rq =
+        rightRow
+        .querySelector(".qty")
+        .value || "";
+
+      rw =
+        rightRow
+        .querySelector(".weight")
+        .value || "";
+
+    }
+
+
+    const tr =
+      document.createElement("tr");
+
+
+    tr.innerHTML =
+      "<td>"+i+".</td>" +
+      "<td>"+lq+"</td>" +
+      "<td>"+lw+"</td>" +
+
+      "<td>"+(i+15)+".</td>" +
+      "<td>"+rq+"</td>" +
+      "<td>"+rw+"</td>";
+
+
+    tbody.appendChild(tr);
+
+  }
+
+
+  /* TOTAL ROW */
+
+  const totalRow =
+    document.createElement("tr");
+
+  totalRow.className =
+    "total-row";
+
+
+  totalRow.innerHTML =
+
+    "<td>Total.</td>" +
+
+    "<td>"+
+    document.getElementById("leftQty")
+      .textContent+
+    "</td>" +
+
+    "<td>"+
+    document.getElementById("leftWeight")
+      .textContent+
+    "</td>" +
+
+    "<td>Total.</td>" +
+
+    "<td>"+
+    document.getElementById("rightQty")
+      .textContent+
+    "</td>" +
+
+    "<td>"+
+    document.getElementById("rightWeight")
+      .textContent+
+    "</td>";
+
+
+  tbody.appendChild(totalRow);
+
+
+  document.getElementById(
+    "exportTotalAvg"
+  ).textContent =
+    document.getElementById(
+      "totalAvg"
+    ).textContent;
+
+
+  document.getElementById(
+    "exportTotalQty"
+  ).textContent =
+    document.getElementById(
+      "totalQty"
+    ).textContent;
+
+
+  document.getElementById(
+    "exportTotalWeight"
+  ).textContent =
+    document.getElementById(
+      "totalWeight"
+    ).textContent;
+
+}
+
+
+/* LOAD HTML2CANVAS */
+function loadHtml2Canvas(){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      if(window.html2canvas){
+
+        resolve();
+
+        return;
+
+      }
+
+
+      const s =
+        document.createElement(
+          "script"
+        );
+
+
+      s.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+
+
+      s.onload=resolve;
+
+      s.onerror=reject;
+
+      document.head.appendChild(s);
+
+    }
+  );
+
+}
+
+
+/* MAKE JPG */
+async function makeJPG(){
+
+  prepareExport();
+
+  await loadHtml2Canvas();
+
+
+  return await html2canvas(
+
+    document.getElementById(
+      "billExport"
+    ),
+
+    {
+      scale:3,
+      useCORS:true,
+      backgroundColor:"#ffffff",
+      logging:false
+    }
+
+  );
+
+}
+
+
+/* SAVE JPG */
+async function saveJPG(){
+
+  try{
+
+    const canvas =
+      await makeJPG();
+
+
+    const link =
+      document.createElement("a");
+
+
+    link.download =
+      "Weight_Bill_"+
+      new Date()
+      .toISOString()
+      .slice(0,10)+
+      ".jpg";
+
+
+    link.href =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.95
+      );
+
+
+    link.click();
+
+
+  }catch(e){
+
+    alert(
+      "JPG banane me problem aayi. Internet ON karke dobara try kare."
+    );
+
+  }
+
+}
+
+
+/* SHARE */
+async function shareBill(){
+
+  try{
+
+    const canvas =
+      await makeJPG();
+
+
+    const blob =
+      await new Promise(
+        resolve =>
+        canvas.toBlob(
+          resolve,
+          "image/jpeg",
+          0.95
+        )
+      );
+
+
+    const file =
+      new File(
+        [blob],
+        "Weight_Bill.jpg",
+        {
+          type:"image/jpeg"
+        }
+      );
+
+
+    if(
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files:[file]
+      })
+    ){
+
+      await navigator.share({
+
+        title:"Weight Bill",
+
+        files:[file]
+
+      });
+
+    }
+
+    else if(
+      navigator.share
+    ){
+
+      await navigator.share({
+
+        title:"Weight Bill",
+
+        text:billText()
+
+      });
+
+    }
+
+    else{
+
+      window.open(
+        "https://wa.me/?text="+
+        encodeURIComponent(
+          billText()
+        ),
+        "_blank"
+      );
+
+    }
+
+  }catch(e){
+
+    if(
+      e.name!=="AbortError"
+    ){
+
+      window.open(
+        "https://wa.me/?text="+
+        encodeURIComponent(
+          billText()
+        ),
+        "_blank"
+      );
+
+    }
+
+  }
+
+}
+
+
+/* PRINT */
+function printBill(){
+
+  calculate();
+
+  window.print();
+
+}
+
+
+/* START */
+document.getElementById(
+  "billDate"
+).value =
+new Date()
+.toISOString()
+.slice(0,10);
+
+renderRows();
+
+</script>
+
+</body>
+</html>
