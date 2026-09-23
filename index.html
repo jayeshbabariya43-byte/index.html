@@ -352,7 +352,7 @@ let t=i<=15?L:R,
 tr=document.createElement('tr');
 
 tr.innerHTML=
-'<td>'+i+'.</td>'+
+'<td>'+'<td>'+(i<=15?i:i+15)+'.</td>+'.</td>'+
 '<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
 '<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
 
