@@ -58,16 +58,22 @@ margin-left:8px;
 cursor:pointer
 }
 
+/* MAIN BILL BORDER */
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-border:1px solid #bbb
+border:3px solid #000;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
 table-layout:fixed
+}
+
+/* MIDDLE VERTICAL BORDER */
+.grid table:first-child{
+border-right:3px solid #000;
 }
 
 th,td{
@@ -84,6 +90,11 @@ text-align:left;
 font-size:18px
 }
 
+/* HEADER BOTTOM BORDER */
+thead th{
+border-bottom:3px solid #000;
+}
+
 input{
 width:100%;
 border:0;
@@ -92,11 +103,14 @@ font-size:18px;
 color:#000
 }
 
+/* TOTAL ROW */
 .total td{
 font-weight:bold;
 background:#fafafa;
 color:#000;
-font-size:19px
+font-size:19px;
+border-top:3px solid #000;
+border-bottom:3px solid #000;
 }
 
 .summary{
@@ -122,6 +136,14 @@ font-weight:bold
 
 .grid{
 grid-template-columns:1fr
+}
+
+.grid table:first-child{
+border-right:0;
+}
+
+.grid table:first-child{
+border-bottom:3px solid #000;
 }
 
 th,td{
@@ -158,7 +180,12 @@ display:none
 }
 
 .grid{
-grid-template-columns:1fr 1fr
+grid-template-columns:1fr 1fr;
+border:3px solid #000;
+}
+
+.grid table:first-child{
+border-right:3px solid #000;
 }
 
 .bill{
@@ -182,19 +209,24 @@ border:0
 <button onclick="removeLast()">− Remove</button>
 <button onclick="newBill()">New Bill</button>
 <button onclick="print()">Print / Save PDF</button>
+<button onclick="savePhoto()">Save Photo</button>
 </div>
 
 <div class="bill">
 
 <div class="date">
 Date :- <span id="dateText" class="dateText"></span>
-<input type="date" id="date"
+
+<input
+type="date"
+id="date"
 style="position:absolute;opacity:0;width:1px;height:1px;">
 </div>
 
 <div class="grid">
 
 <table>
+
 <thead>
 <tr>
 <th>No.</th>
@@ -202,10 +234,13 @@ style="position:absolute;opacity:0;width:1px;height:1px;">
 <th>Weight.</th>
 </tr>
 </thead>
+
 <tbody id="L"></tbody>
+
 </table>
 
 <table>
+
 <thead>
 <tr>
 <th>No.</th>
@@ -213,7 +248,9 @@ style="position:absolute;opacity:0;width:1px;height:1px;">
 <th>Weight.</th>
 </tr>
 </thead>
+
 <tbody id="R"></tbody>
+
 </table>
 
 </div>
@@ -239,6 +276,8 @@ style="position:absolute;opacity:0;width:1px;height:1px;">
 
 </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 
@@ -467,6 +506,26 @@ showDate();
 draw();
 
 }
+
+}
+
+async function savePhoto(){
+
+let bill=document.querySelector('.bill');
+
+let canvas=await html2canvas(bill,{
+scale:3,
+backgroundColor:'#ffffff'
+});
+
+let link=document.createElement('a');
+
+link.download='Weight-Bill.jpg';
+
+link.href=
+canvas.toDataURL('image/jpeg',0.95);
+
+link.click();
 
 }
 
