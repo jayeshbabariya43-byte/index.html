@@ -348,11 +348,12 @@ let h=Math.ceil(n/2);
 
 for(let i=1;i<=n;i++){
 
-let t=i<=15?L:R,
-tr=document.createElement('tr');
+let t=i<=h?L:R,
+tr=document.createElement('tr'),
+num=i<=h?i:i+h;
 
 tr.innerHTML=
-'<td>'+'<td>'+i+'.</td>+'.</td>'+
+'<td>'+num+'.</td>'+
 '<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
 '<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
 
