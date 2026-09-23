@@ -508,22 +508,36 @@ draw();
 async function savePhoto(){
 
 let bill=document.querySelector('.bill');
+let grid=document.querySelector('.grid');
+
+let oldOverflow=bill.style.overflow;
+let oldWidth=bill.style.width;
+let oldPadding=bill.style.padding;
+
+bill.style.overflow='visible';
+bill.style.width=(grid.scrollWidth+40)+'px';
+bill.style.padding='20px';
 
 let canvas=await html2canvas(bill,{
 scale:3,
-backgroundColor:'#ffffff'
+backgroundColor:'#ffffff',
+width:bill.scrollWidth+40,
+windowWidth:bill.scrollWidth+40
 });
+
+bill.style.overflow=oldOverflow;
+bill.style.width=oldWidth;
+bill.style.padding=oldPadding;
 
 let link=document.createElement('a');
 
 link.download='Weight-Bill.jpg';
 
-link.href=
-canvas.toDataURL('image/jpeg',0.95);
+link.href=canvas.toDataURL('image/jpeg',0.95);
 
 link.click();
 
-}
+  }
 
 draw();
 
