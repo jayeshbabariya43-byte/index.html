@@ -4,33 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>JB weight Bill</title>
+<title>Weight Bill</title>
 
 <style>
-body{font-family:Arial;margin:0;background:#f3f3f3;color:#000}
-.app{max-width:1000px;margin:auto;padding:10px}
+body{
+font-family:Arial;
+margin:0;
+background:#f3f3f3;
+color:#000
+}
+
+.app{
+max-width:1000px;
+margin:auto;
+padding:12px
+}
 
 button{
-padding:9px 12px;
+padding:10px 14px;
 margin:3px;
 border:0;
 border-radius:7px;
 background:#222;
-color:white
+color:white;
+font-size:16px
 }
 
-.bill{background:white;padding:12px}
+.bill{
+background:white;
+padding:14px
+}
 
 .date{
-font-size:21px;
+font-size:23px;
 font-weight:bold;
-margin:8px 0 14px;
+margin:9px 0 16px;
 color:#000;
 white-space:nowrap
 }
 
 .date input{
-font-size:21px;
+font-size:23px;
 font-weight:bold;
 border:0;
 outline:0;
@@ -40,7 +54,8 @@ width:145px
 }
 
 .dateText{
-margin-left:11px;
+margin-left:8px;
+cursor:pointer
 }
 
 .grid{
@@ -57,39 +72,44 @@ table-layout:fixed
 
 th,td{
 border:1px solid #ccc;
-height:40px;
-padding:4px 8px;
+height:44px;
+padding:5px 9px;
 width:33.333%;
-color:#000
+color:#000;
+font-size:18px
 }
 
-th{text-align:left}
+th{
+text-align:left;
+font-size:18px
+}
 
 input{
 width:100%;
 border:0;
 outline:0;
-font-size:16px;
+font-size:18px;
 color:#000
 }
 
 .total td{
 font-weight:bold;
 background:#fafafa;
-color:#000
+color:#000;
+font-size:19px
 }
 
 .summary{
-font-size:24px;
+font-size:26px;
 font-weight:bold;
-line-height:1.8;
-margin-top:18px;
+line-height:1.9;
+margin-top:20px;
 color:#000
 }
 
 .summary div{
 display:grid;
-grid-template-columns:175px 1fr;
+grid-template-columns:180px 1fr;
 white-space:nowrap
 }
 
@@ -99,26 +119,56 @@ font-weight:bold
 }
 
 @media(max-width:700px){
-.grid{grid-template-columns:1fr}
+
+.grid{
+grid-template-columns:1fr
+}
+
+th,td{
+height:44px;
+font-size:18px
+}
+
+input{
+font-size:18px
+}
+
+.date{
+font-size:22px
+}
 
 .summary{
-font-size:21px
+font-size:23px
 }
 
 .summary div{
-grid-template-columns:155px 1fr
+grid-template-columns:160px 1fr
 }
+
 }
 
 @media print{
-body{background:white}
-.actions{display:none}
-.grid{grid-template-columns:1fr 1fr}
-.bill{padding:0}
+
+body{
+background:white
+}
+
+.actions{
+display:none
+}
+
+.grid{
+grid-template-columns:1fr 1fr
+}
+
+.bill{
+padding:0
+}
 
 .date input{
-border:0;
+border:0
 }
+
 }
 </style>
 </head>
@@ -138,7 +188,8 @@ border:0;
 
 <div class="date">
 Date :- <span id="dateText" class="dateText"></span>
-<input type="date" id="date" style="position:absolute;opacity:0;width:1px;height:1px;">
+<input type="date" id="date"
+style="position:absolute;opacity:0;width:1px;height:1px;">
 </div>
 
 <div class="grid">
@@ -203,7 +254,9 @@ let dateText=document.getElementById('dateText');
 let savedDate=localStorage.getItem('wb_date');
 
 if(savedDate){
+
 dateInput.value=savedDate;
+
 }else{
 
 let d=new Date();
@@ -229,12 +282,15 @@ let day=p[2];
 
 dateText.textContent=
 day+' / '+month+' / '+year;
+
 }
 
 showDate();
 
 dateText.onclick=function(){
+
 dateInput.click();
+
 };
 
 dateInput.onchange=function(){
@@ -245,6 +301,7 @@ this.value
 );
 
 showDate();
+
 };
 
 function draw(){
