@@ -371,17 +371,13 @@ let tr=document.createElement('tr');
 
 tr.className='total';
 
-tr.innerHTML=
-'<td>Total.</td>'+
-'<td>0</td>'+
-'<td>0.0</td>';
+tr.innerHTML='<td>Total.</td><td>0</td><td>0.0</td>';
 
 t.appendChild(tr);
 
 }
 
-document.querySelectorAll('input[data-i]')
-.forEach(x=>x.oninput=save);
+document.querySelectorAll('input').forEach(x=>x.oninput=save);
 
 calc();
 
