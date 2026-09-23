@@ -352,7 +352,7 @@ let t=i<=15?L:R,
 tr=document.createElement('tr');
 
 tr.innerHTML=
-'<td>'+i+'.</td>'+
+'<td>'+(i<=h?i:i+h)+'.</td>'+
 '<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
 '<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
 
@@ -516,7 +516,7 @@ let oldPadding=bill.style.padding;
 
 bill.style.overflow='visible';
 bill.style.width=grid.scrollWidth+'px';
-bill.style.padding='50px 30px';
+bill.style.padding='0 30px 80px 30px';
 
 let canvas=await html2canvas(bill,{
 scale:3,
