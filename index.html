@@ -344,7 +344,7 @@ function draw(){
 L.innerHTML='';
 R.innerHTML='';
 
-let h=15;
+let h=Math.ceil(n/2);
 
 for(let i=1;i<=n;i++){
 
@@ -352,7 +352,7 @@ let t=i<=15?L:R,
 tr=document.createElement('tr');
 
 tr.innerHTML=
-'<td>'+(i<=h?i:i+h)+'.</td>'+
+'<td>'+i+'.</td>'+
 '<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
 '<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
 
@@ -457,7 +457,7 @@ tr.children[2].textContent=w.toFixed(1);
 
 function add(){
 
-n++;
+n+=2;
 save();
 draw();
 
