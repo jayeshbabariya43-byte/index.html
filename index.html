@@ -68,7 +68,7 @@ border:3px solid #000;
 table{
 width:100%;
 border-collapse:collapse;
-table-layout:fixed
+table-layout:fixed;
 box-sizing:border-box;
 }
 
@@ -202,11 +202,23 @@ border:0
 <div class="app">
 
 <div class="actions">
+
 <button onclick="add()">+ Add Box</button>
+
 <button onclick="removeLast()">− Remove</button>
+
 <button onclick="newBill()">New Bill</button>
+
 <button onclick="print()">Print / Save PDF</button>
+
 <button onclick="savePhoto()">Save Photo</button>
+
+<button onclick="saveProject()">Save Project</button>
+
+<button onclick="openProject()">Open Project</button>
+
+<button onclick="deleteProject()">Delete Project</button>
+
 </div>
 
 <div class="bill">
@@ -501,6 +513,203 @@ draw();
 }
 
 }
+
+
+/* =========================
+   PROJECT SAVE
+   ========================= */
+
+function saveProject(){
+
+let name=prompt('Project ka naam likho:');
+
+if(!name){
+return;
+}
+
+name=name.trim();
+
+if(!name){
+return;
+}
+
+let projects=
+JSON.parse(
+localStorage.getItem('wb_projects')||'{}'
+);
+
+projects[name]={
+n:n,
+d:data,
+date:dateInput.value
+};
+
+localStorage.setItem(
+'wb_projects',
+JSON.stringify(projects)
+);
+
+alert('Project save ho gaya');
+
+}
+
+
+/* =========================
+   PROJECT OPEN
+   ========================= */
+
+function openProject(){
+
+let projects=
+JSON.parse(
+localStorage.getItem('wb_projects')||'{}'
+);
+
+let names=Object.keys(projects);
+
+if(!names.length){
+
+alert('Koi saved project nahi hai');
+
+return;
+
+}
+
+let list=names
+.map((x,i)=>(i+1)+'. '+x)
+.join('\n');
+
+let choice=prompt(
+'Saved Projects:\n\n'+
+list+
+'\n\nProject number likho:'
+);
+
+if(choice===null){
+return;
+}
+
+let index=Number(choice)-1;
+
+if(
+!Number.isInteger(index)||
+index<0||
+index>=names.length
+){
+
+alert('Galat project number');
+
+return;
+
+}
+
+let name=names[index];
+
+let project=projects[name];
+
+n=project.n||30;
+
+data=project.d||[];
+
+if(project.date){
+
+dateInput.value=project.date;
+
+localStorage.setItem(
+'wb_date',
+project.date
+);
+
+showDate();
+
+}
+
+localStorage.setItem(
+'wb',
+JSON.stringify({
+n:n,
+d:data
+})
+);
+
+draw();
+
+alert('Project open ho gaya');
+
+}
+
+
+/* =========================
+   PROJECT DELETE
+   ========================= */
+
+function deleteProject(){
+
+let projects=
+JSON.parse(
+localStorage.getItem('wb_projects')||'{}'
+);
+
+let names=Object.keys(projects);
+
+if(!names.length){
+
+alert('Koi saved project nahi hai');
+
+return;
+
+}
+
+let list=names
+.map((x,i)=>(i+1)+'. '+x)
+.join('\n');
+
+let choice=prompt(
+'Delete karne ke liye project number likho:\n\n'+
+list
+);
+
+if(choice===null){
+return;
+}
+
+let index=Number(choice)-1;
+
+if(
+!Number.isInteger(index)||
+index<0||
+index>=names.length
+){
+
+alert('Galat project number');
+
+return;
+
+}
+
+let name=names[index];
+
+if(
+confirm(
+'Project "'+
+name+
+'" delete kare?'
+)
+){
+
+delete projects[name];
+
+localStorage.setItem(
+'wb_projects',
+JSON.stringify(projects)
+);
+
+alert('Project delete ho gaya');
+
+}
+
+}
+
 
 async function savePhoto(){
 
