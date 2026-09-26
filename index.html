@@ -302,8 +302,8 @@ tr=document.createElement('tr');
 
 tr.innerHTML=
 '<td>'+i+'.</td>'+
-'<td><input inputmode="numeric" data-i="'+i+'" data-k="q"></td>'+
-'<td><input inputmode="decimal" data-i="'+i+'" data-k="w"></td>';
+'<td><input inputmode="numeric" enterkeyhint="next" data-i="'+i+'" data-k="q"></td>'+
+'<td><input inputmode="decimal" enterkeyhint="next" data-i="'+i+'" data-k="w"></td>';
 
 t.appendChild(tr);
 
@@ -315,49 +315,74 @@ let wInput=tr.querySelector('[data-k=w]');
 qInput.value=x.q||'';
 wInput.value=x.w||'';
 
+
 /* =========================
-   QTY: 1 → 2 → 3 → 4...
+   RELIABLE NEXT FUNCTION
    ========================= */
 
-qInput.addEventListener('keydown',function(e){
+function goNext(type,currentIndex){
 
-if(e.key==='Enter'){
-
-e.preventDefault();
+let nextIndex=currentIndex+1;
 
 let next=document.querySelector(
-'[data-k="q"][data-i="'+(i+1)+'"]'
+'[data-k="'+type+'"][data-i="'+nextIndex+'"]'
 );
 
 if(next){
 
+setTimeout(function(){
+
 next.focus();
 
+next.select();
+
+},50);
+
 }
+
+}
+
+
+/* =========================
+   QTY
+   1 → 2 → 3 → 4...
+   ========================= */
+
+qInput.addEventListener('keydown',function(e){
+
+if(
+e.key==='Enter' ||
+e.key==='Next' ||
+e.keyCode===13
+){
+
+e.preventDefault();
+e.stopPropagation();
+
+goNext('q',i);
 
 }
 
 });
 
+
 /* =========================
-   WEIGHT: 1 → 2 → 3 → 4...
+   WEIGHT
+   1 → 2 → 3 → 4...
    ========================= */
 
 wInput.addEventListener('keydown',function(e){
 
-if(e.key==='Enter'){
+if(
+e.key==='Enter' ||
+e.key==='Next' ||
+e.keyCode===13
+){
 
 e.preventDefault();
+e.stopPropagation();
 
-let next=document.querySelector(
-'[data-k="w"][data-i="'+(i+1)+'"]'
-);
-
-if(next){
-
-next.focus();
-
-}
+goNext('w',i);
 
 }
 
@@ -744,4 +769,4 @@ link.click();
 draw();
 
 </script></body>
-</html>
+   </html>
