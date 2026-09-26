@@ -375,7 +375,21 @@ let x=data[i-1]||{};
 
 tr.querySelector('[data-k=q]').value=x.q||'';
 tr.querySelector('[data-k=w]').value=x.w||'';
+tr.querySelector('[data-k=q]').addEventListener('keydown',function(e){
+if(e.key==='Enter'){
+e.preventDefault();
+let next=document.querySelector('[data-k="q"][data-i="'+(i+1)+'"]');
+if(next) next.focus();
+}
+});
 
+tr.querySelector('[data-k=w]').addEventListener('keydown',function(e){
+if(e.key==='Enter'){
+e.preventDefault();
+let next=document.querySelector('[data-k="w"][data-i="'+(i+1)+'"]');
+if(next) next.focus();
+}
+});
 }
 
 for(let t of [L,R]){
